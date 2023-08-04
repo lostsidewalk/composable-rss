@@ -1,3 +1,142 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+    font-family: 'Merriweather';
+}
+
+.tooltip {
+    display: none;
+}
+
+@font-face {
+    font-family: 'Russo One';
+    font-style: normal;
+    font-display: swap;
+    src: url(~/assets/fonts/Z9XUDmZRWg6M1LvRYsH-yA.ttf) format('truetype');
+}
+  
+@font-face {
+    font-family: 'Merriweather';
+    font-style: normal;
+    font-display: swap;
+    src: url(~/assets/fonts/Merriweather-Regular.ttf) format('truetype');
+}
+
+.elevation-1 {
+    border: 1px solid slateblue;
+    box-shadow: 1px 1px 2px slateblue;
+}
+
+.elevation-6 {
+    border: 1px solid slateblue;
+    box-shadow: 5px 5px 3px slateblue;
+}
+
+.elevation-7 {
+    border: 2px solid slateblue;
+    box-shadow: 5px 5px 4px slateblue;
+}
+
+.row {
+    width: 100%;
+}
+
+.cols-12, .cols-sm-10, .cols-sm-8 {
+    width: 100%;
+}
+
+@media (max-width: 1024px) {
+    cols-sm-10 {
+        width: 80%;
+    }
+
+    cols-sm-8 {
+        width: 60%;
+    }
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.card {
+    padding: .4rem;
+    box-sizing: 1px 1px 4px lightgrey;
+}
+
+.card-title {
+    padding: .2rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.card-text {
+    padding: .2rem;
+    font-weight: normal;
+}
+
+.card-subtitle {
+    padding: .2rem;
+    font-weight: normal;
+    text-align: center;
+}
+
+.card-actions {
+    padding: .4rem;
+}
+
+
+.mt-12 {
+    margin-top: 1.2rem;
+}
+
+.mb-12 {
+    margin-bottom: 1.2rem;
+}
+
+.pa-2 {
+    padding: .2rem;
+}
+
+.pa-4 {
+    padding: .4rem;
+}
+
+.text {
+    border: 0;
+}
+
+.dialog {
+
+}
+
+.alert {
+
+}
+
+.error {
+
+}
+
+.dark {
+    
+}
+
+.outlined {
+    border: 1px solid slateblue;
+    border-radius: 3px;
+}
+
+.dense {
+    padding: .4rem;
+}
+
+.flex-grow-1 {
+    flex-grow: 1;
+}
+
+.d-flex {
+    display: flex;
+}
