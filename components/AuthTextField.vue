@@ -26,7 +26,9 @@ export default {
 
 <style scoped>
 .auth-text-field {
+  font-family: 'Russo One';
   flex-grow: 1;
   padding: 1rem;
+  margin: 1rem;
 }
 </style>

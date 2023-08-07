@@ -31,8 +31,7 @@ export default {
 
 <style scoped>
 .login-with-google-btn {
-  min-height: 3rem;
-  font-weight: bold;
+  font-family: 'Russo One';
   padding: 1rem;
   max-width: fit-content;
 }

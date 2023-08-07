@@ -31,9 +31,9 @@ export default {
 
 <style scoped>
 .auth-button {
-  min-height: 3rem;
-  font-weight: bold;
+  font-family: 'Russo One';
   padding: 1rem;
   max-width: fit-content;
+  user-select: none;
 }
 </style>
