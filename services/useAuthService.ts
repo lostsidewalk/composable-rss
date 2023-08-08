@@ -40,12 +40,13 @@ export function useAuthService() {
   const isAuthenticated: Ref<boolean> = ref(false);
 
   // URLs
-  const currentUserUrl = process.env.VUE_APP_COMPRSS_API_URL + "/currentuser";
-  const authUrl = process.env.VUE_APP_COMPRSS_API_URL + "/authenticate";
-  const pwResetUrl = process.env.VUE_APP_COMPRSS_API_URL + "/pw_reset";
-  const pwUpdateUrl = process.env.VUE_APP_COMPRSS_API_URL + "/pw_update";
-  const registrationUrl = process.env.VUE_APP_COMPRSS_API_URL + "/register";
-  const logoutUrl = process.env.VUE_APP_COMPRSS_API_URL + "/deauthenticate";
+  let compRssApiUrl = import.meta.env.VITE_COMPRSS_API_URL;
+  const currentUserUrl = compRssApiUrl + "/currentuser";
+  const authUrl = compRssApiUrl + "/authenticate";
+  const pwResetUrl = compRssApiUrl + "/pw_reset";
+  const pwUpdateUrl = compRssApiUrl + "/pw_update";
+  const registrationUrl = compRssApiUrl + "/register";
+  const logoutUrl = compRssApiUrl + "/deauthenticate";
 
   function log(msg: string) {
     console.log("auth-service: " + msg);
