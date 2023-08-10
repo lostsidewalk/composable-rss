@@ -135,8 +135,7 @@ export function useAuthService() {
   }
 
   function isJsonContent(contentType: string) {
-    console.log('content-type: ' + contentType);
-    return false;
+    return 'application/json' === contentType.toLowerCase();
   }
 
   // login methods

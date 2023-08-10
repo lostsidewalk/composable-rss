@@ -42,8 +42,7 @@
 
 <script setup>
 import { onMounted } from 'vue';
-// import { ref, reactive, computed, watch, onBeforeUnmount, nextTick } from 'vue';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useAuthService } from '@/services/useAuthService.ts';
@@ -67,6 +66,7 @@ const {
   roSubscription,
   roSettingsIsLoading,
   // 
+  openSettings,
   exportData,
   finalizeDeactivation,
   initPasswordReset,
@@ -238,6 +238,15 @@ function refreshToken() {
       }
     });
 }
+
+watch(isAuthenticated, (newIsAuthenticated) => {
+  if (newIsAuthenticated) {
+    openSettings();
+  } else {
+    // TODO: discard settings 
+  }
+});
+
 </script>
 
 <style scoped>

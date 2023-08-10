@@ -1,44 +1,58 @@
 import { ref, reactive, readonly } from 'vue';
+import axios from "axios";
 
 export function useSettingsService(props) {
-  const { 
-    handleServerError, 
-    setLastServerMessage 
+  const {
+    handleServerError,
+    setLastServerMessage
   } = props.notification;
 
   const settingsIsLoading = ref(false);
   const account = reactive({});
   const subscription = reactive({});
 
-  const { baseUrl } = props;
+  let compRssApiUrl = import.meta.env.VITE_COMPRSS_API_URL;
+  const settingsUrl = compRssApiUrl + '/settings';
+  const exportUrl = compRssApiUrl + '/export';
+  const deregisterUrl = compRssApiUrl + '/deregister';
+  const orderUrl = compRssApiUrl + '/order';
+  const subscriptionsUrl = compRssApiUrl + '/subscriptions';
 
   const auth = props.auth;
 
   function openSettings() {
     settingsIsLoading.value = true;
+
     auth.getTokenSilently().then((token) => {
-      const controller = new AbortController();
+      const source = axios.CancelToken.source();
+
       const requestOptions = {
         headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         credentials: 'include',
-        signal: controller.signal
+        cancelToken: source.token
       };
-      const timeoutId = setTimeout(() => controller.abort(), 15000);
-      fetch(baseUrl + "/settings", requestOptions)
+
+      const timeoutId = setTimeout(() => source.cancel('Request timeout'), 15000);
+
+      axios.get(settingsUrl, requestOptions)
         .then((response) => {
-          let contentType = response.headers.get("content-type");
-          let isJson = contentType && contentType.indexOf("application/json") !== -1;
+          let contentType = response.headers['Content-Type'];
+          let isJson = contentType && contentType.includes('application/json');
+
           if (response.status === 200) {
-            return isJson ? response.json() : {};
+            return isJson ? response.data : {};
           } else {
-            return isJson ?
-              response.json().then(j => { throw new Error(j.message + (j.details ? (': ' + j.details) : '')) }) :
-              response.text().then(t => { throw new Error(t) });
+            if (isJson) {
+              throw new Error(response.data.message + (response.data.details ? (': ' + response.data.details) : ''));
+            } else {
+              throw new Error(response.data);
+            }
           }
-        }).then((data) => {
+        })
+        .then((data) => {
           Object.keys(account).forEach((key) => {
             delete account[key];
           });
@@ -48,32 +62,34 @@ export function useSettingsService(props) {
             authProvider: data.authProvider,
             authProviderProfileImgUrl: data.authProviderProfileImgUrl,
             authProviderUsername: data.authProviderUsername,
-            frameworkConfig: data.frameworkConfig, 
-          })
+            frameworkConfig: data.frameworkConfig
+          });
           if (data.subscription) {
             Object.keys(subscription).forEach((key) => {
               delete subscription[key];
             });
             Object.assign(subscription, data.subscription);
           }
-        }).catch((error) => {
+        })
+        .catch((error) => {
           handleServerError(error);
-          settingsIsLoading.value = false; // top-level 
-        }).finally(() => {
-          settingsIsLoading.value = false; // top-level 
+        })
+        .finally(() => {
           clearTimeout(timeoutId);
+          settingsIsLoading.value = false;
         });
     }).catch((error) => {
       handleServerError(error);
-      settingsIsLoading.value = false; // top-level
+      settingsIsLoading.value = false;
     });
   }
-  
+
   function updateNotificationPreferences(updateNotificationRequest) {
-    let enableAccountAlerts = updateNotificationRequest.enableAccountAlerts;
-    let enableDailyFeedReport = updateNotificationRequest.enableDailyFeedReport;
-    let enableProductNotifications = updateNotificationRequest.enableProductNotifications;
-    let newSettings = {
+    const enableAccountAlerts = updateNotificationRequest.enableAccountAlerts;
+    const enableDailyFeedReport = updateNotificationRequest.enableDailyFeedReport;
+    const enableProductNotifications = updateNotificationRequest.enableProductNotifications;
+
+    const newSettings = {
       frameworkConfig: {
         notifications: {
           accountAlerts: enableAccountAlerts,
@@ -82,32 +98,39 @@ export function useSettingsService(props) {
         }
       }
     };
+
     settingsIsLoading.value = true;
+
     auth.getTokenSilently().then((token) => {
-      const controller = new AbortController();
+      const source = axios.CancelToken.source();
+
       const requestOptions = {
         method: 'PUT',
+        url: settingsUrl,
         headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(newSettings),
-        credentials: 'include',
-        signal: controller.signal
+        data: newSettings,
+        cancelToken: source.token
       };
-      const timeoutId = setTimeout(() => controller.abort(), 15000);
-      fetch(baseUrl + "/settings", requestOptions).then((response) => {
+
+      const timeoutId = setTimeout(() => source.cancel('Request timeout'), 15000);
+
+      axios(requestOptions).then((response) => {
         if (response.status === 200) {
           return;
         } else {
-          let contentType = response.headers.get("content-type");
-          let isJson = contentType && contentType.indexOf("application/json") !== -1;
-          return isJson ?
-            response.json().then(j => { throw new Error(j.message + (j.details ? (': ' + j.details) : '')) }) :
-            response.text().then(t => { throw new Error(t) });
+          const contentType = response.headers['content-type'];
+          const isJson = contentType && contentType.includes('application/json');
+
+          if (isJson) {
+            throw new Error(response.data.message + (response.data.details ? (': ' + response.data.details) : ''));
+          } else {
+            throw new Error(response.data);
+          }
         }
       }).then(() => {
-        // TODO: (enhancement) set the account obj properties from the JSON response object (above) 
         if (newSettings.username) {
           account.username = newSettings.username;
         }
@@ -135,43 +158,48 @@ export function useSettingsService(props) {
 
   function exportData() {
     settingsIsLoading.value = true;
+
     auth.getTokenSilently().then((token) => {
-      const controller = new AbortController();
+      const source = axios.CancelToken.source();
+
       const requestOptions = {
         method: 'GET',
+        url: exportUrl,
         headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
-        credentials: 'include',
-        signal: controller.signal
+        responseType: 'blob',
+        cancelToken: source.token
       };
-      const timeoutId = setTimeout(() => controller.abort(), 15000);
-      fetch(baseUrl + "/queues/opml", requestOptions).then((response) => {
-        if (response.status === 200) {
-          return response.blob();
-        } else {
-          let contentType = response.headers.get("content-type");
-          let isJson = contentType && contentType.indexOf("application/json") !== -1;
-          return isJson ?
-            response.json().then(j => { throw new Error(j.message + (j.details ? (': ' + j.details) : '')) }) :
-            response.text().then(t => { throw new Error(t) });
-        }
-      }).then((blob) => {
-        let url = window.URL.createObjectURL(blob);
-        let anchor = document.createElement('a');
-        anchor.href = url;
-        anchor.download = 'feedgears-opml-export.xml';
-        document.body.appendChild(anchor);
-        anchor.click();
-        anchor.remove();
-        setLastServerMessage('opmlExportDownloaded');
-      }).catch((error) => {
-        handleServerError(error);
-      }).finally(() => {
-        clearTimeout(timeoutId);
-        settingsIsLoading.value = false;
-      });
+
+      const timeoutId = setTimeout(() => source.cancel('Request timeout'), 15000);
+
+      axios(requestOptions)
+        .then((response) => {
+          if (response.status === 200) {
+            return response.data;
+          } else {
+            throw new Error('Unexpected response status: ' + response.status);
+          }
+        })
+        .then((blob) => {
+          const url = window.URL.createObjectURL(new Blob([blob]));
+          const anchor = document.createElement('a');
+          anchor.href = url;
+          anchor.download = 'feedgears-opml-export.xml';
+          document.body.appendChild(anchor);
+          anchor.click();
+          anchor.remove();
+          setLastServerMessage('opmlExportDownloaded');
+        })
+        .catch((error) => {
+          handleServerError(error);
+        })
+        .finally(() => {
+          clearTimeout(timeoutId);
+          settingsIsLoading.value = false;
+        });
     }).catch((error) => {
       handleServerError(error);
       settingsIsLoading.value = false;
@@ -180,36 +208,38 @@ export function useSettingsService(props) {
 
   function finalizeDeactivation() {
     settingsIsLoading.value = true;
+
     auth.getTokenSilently().then((token) => {
-      const controller = new AbortController();
+      const source = axios.CancelToken.source();
+
       const requestOptions = {
         method: 'DELETE',
+        url: deregisterUrl,
         headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
-        credentials: 'include',
-        signal: controller.signal
+        cancelToken: source.token
       };
-      const timeoutId = setTimeout(() => controller.abort(), 15000);
-      fetch(baseUrl + "/deregister", requestOptions).then((response) => {
-        if (response.status === 200) {
-          return response.blob();
-        } else {
-          let contentType = response.headers.get("content-type");
-          let isJson = contentType && contentType.indexOf("application/json") !== -1;
-          return isJson ?
-            response.json().then(j => { throw new Error(j.message + (j.details ? (': ' + j.details) : '')) }) :
-            response.text().then(t => { throw new Error(t) });
-        }
-      }).catch((error) => {
-        handleServerError(error);
-      }).finally(() => {
-        clearTimeout(timeoutId);
-        settingsIsLoading.value = false;
-        auth.tearDownLoggedInSession();
-        router.value.push("/app");
-      });
+
+      const timeoutId = setTimeout(() => source.cancel('Request timeout'), 15000);
+
+      axios(requestOptions)
+        .then((response) => {
+          if (response.status === 200) {
+            return response.data;
+          } else {
+            throw new Error('Unexpected response status: ' + response.status);
+          }
+        })
+        .catch((error) => {
+          handleServerError(error);
+        })
+        .finally(() => {
+          clearTimeout(timeoutId);
+          settingsIsLoading.value = false;
+          auth.tearDownLoggedInSession();
+        });
     }).catch((error) => {
       handleServerError(error);
       settingsIsLoading.value = false;
@@ -232,34 +262,44 @@ export function useSettingsService(props) {
 
   function submitOrder() {
     settingsIsLoading.value = true;
+
     auth.getTokenSilently().then((token) => {
-      const controller = new AbortController();
+      const source = axios.CancelToken.source();
+
       const requestOptions = {
         method: 'POST',
+        url: orderUrl,
         headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
-        credentials: 'include',
-        signal: controller.signal
+        cancelToken: source.token
       };
-      const timeoutId = setTimeout(() => controller.abort(), 15000);
-      fetch(baseUrl + "/order", requestOptions)
+
+      const timeoutId = setTimeout(() => source.cancel('Request timeout'), 15000);
+
+      axios(requestOptions)
         .then((response) => {
-          let contentType = response.headers.get("content-type");
-          let isJson = contentType && contentType.indexOf("application/json") !== -1;
+          let contentType = response.headers['content-type'];
+          let isJson = contentType && contentType.includes('application/json');
+
           if (response.status === 200) {
-            return isJson ? response.json() : {};
+            return isJson ? response.data : {};
           } else {
-            return isJson ?
-              response.json().then(j => { throw new Error(j.message + (j.details ? (': ' + j.details) : '')) }) :
-              response.text().then(t => { throw new Error(t) });
+            if (isJson) {
+              throw new Error(response.data.message + (response.data.details ? (': ' + response.data.details) : ''));
+            } else {
+              throw new Error(response.data);
+            }
           }
-        }).then((data) => {
+        })
+        .then((data) => {
           window.location.href = data.sessionUrl;
-        }).catch((error) => {
+        })
+        .catch((error) => {
           handleServerError(error);
-        }).finally(() => {
+        })
+        .finally(() => {
           clearTimeout(timeoutId);
           settingsIsLoading.value = false;
         });
@@ -271,37 +311,46 @@ export function useSettingsService(props) {
 
   function cancelSubscription() {
     settingsIsLoading.value = true;
+
     auth.getTokenSilently().then((token) => {
-      const controller = new AbortController();
+      const source = axios.CancelToken.source();
+
       const requestOptions = {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        credentials: 'include',
         method: 'PUT',
-        body: JSON.stringify({
+        url: subscriptionsUrl,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        data: {
           subscriptionStatus: 'CANCELED'
-        }),
-        signal: controller.signal
+        },
+        cancelToken: source.token
       };
-      const timeoutId = setTimeout(() => controller.abort(), 15000);
-      fetch(baseUrl + "/subscriptions", requestOptions)
+
+      const timeoutId = setTimeout(() => source.cancel('Request timeout'), 15000);
+
+      axios(requestOptions)
         .then((response) => {
           if (response.status === 200) {
             auth.unsubscribe();
             subscription.cancelAtPeriodEnd = true;
             setLastServerMessage('yourSubscriptionWasCanceledClickToResume');
           } else {
-            let contentType = response.headers.get("content-type");
-            let isJson = contentType && contentType.indexOf("application/json") !== -1;
-            return isJson ?
-              response.json().then(j => { throw new Error(j.message + (j.details ? (': ' + j.details) : '')) }) :
-              response.text().then(t => { throw new Error(t) });
+            const contentType = response.headers['content-type'];
+            const isJson = contentType && contentType.includes('application/json');
+
+            if (isJson) {
+              throw new Error(response.data.message + (response.data.details ? (': ' + response.data.details) : ''));
+            } else {
+              throw new Error(response.data);
+            }
           }
-        }).catch((error) => {
+        })
+        .catch((error) => {
           handleServerError(error);
-        }).finally(() => {
+        })
+        .finally(() => {
           clearTimeout(timeoutId);
           settingsIsLoading.value = false;
         });
@@ -313,39 +362,49 @@ export function useSettingsService(props) {
 
   function resumeSubscription() {
     settingsIsLoading.value = true;
+
     auth.getTokenSilently().then((token) => {
-      const controller = new AbortController();
+      const source = axios.CancelToken.source();
+
       const requestOptions = {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        credentials: 'include',
         method: 'PUT',
-        body: JSON.stringify({
+        url: subscriptionsUrl,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        data: {
           subscriptionStatus: 'ACTIVE'
-        }),
-        signal: controller.signal
+        },
+        cancelToken: source.token
       };
-      const timeoutId = setTimeout(() => controller.abort(), 15000);
-      fetch(baseUrl + "/subscriptions", requestOptions).then((response) => {
-        if (response.status === 200) {
-          auth.subscribe();
-          subscription.cancelAtPeriodEnd = false;
-          setLastServerMessage('yourSubscriptionWasResumed');
-        } else {
-          let contentType = response.headers.get("content-type");
-          let isJson = contentType && contentType.indexOf("application/json") !== -1;
-          return isJson ?
-            response.json().then(j => { throw new Error(j.message + (j.details ? (': ' + j.details) : '')) }) :
-            response.text().then(t => { throw new Error(t) });
-        }
-      }).catch((error) => {
-        handleServerError(error);
-      }).finally(() => {
-        clearTimeout(timeoutId);
-        settingsIsLoading.value = false;
-      });
+
+      const timeoutId = setTimeout(() => source.cancel('Request timeout'), 15000);
+
+      axios(requestOptions)
+        .then((response) => {
+          if (response.status === 200) {
+            auth.subscribe();
+            subscription.cancelAtPeriodEnd = false;
+            setLastServerMessage('yourSubscriptionWasResumed');
+          } else {
+            const contentType = response.headers['content-type'];
+            const isJson = contentType && contentType.includes('application/json');
+
+            if (isJson) {
+              throw new Error(response.data.message + (response.data.details ? (': ' + response.data.details) : ''));
+            } else {
+              throw new Error(response.data);
+            }
+          }
+        })
+        .catch((error) => {
+          handleServerError(error);
+        })
+        .finally(() => {
+          clearTimeout(timeoutId);
+          settingsIsLoading.value = false;
+        });
     }).catch((error) => {
       handleServerError(error);
       settingsIsLoading.value = false;
@@ -358,16 +417,15 @@ export function useSettingsService(props) {
 
   return {
     roAccount,
-    roSubscription, 
-    roSettingsIsLoading, 
-    // 
-    openSettings, 
-    updateNotificationPreferences, 
+    roSubscription,
+    roSettingsIsLoading,
+    openSettings,
+    updateNotificationPreferences,
     exportData,
     finalizeDeactivation,
     initPasswordReset,
-    submitOrder, 
+    submitOrder,
     cancelSubscription,
     resumeSubscription,
-  }
+  };
 }

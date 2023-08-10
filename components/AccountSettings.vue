@@ -46,8 +46,8 @@
 <script>
 export default {
     props: {
-        authProvider: { type: String, required: true },
-        authProviderImgUrl: { type: String, required: false },
+        authProvider: { type: String, default: 'LOCAL' },
+        authProviderProfileImgUrl: { type: String, required: false },
     },
     emits: ["exportData", "finalizeDeactivation", "initPasswordReset"],
     data() {
@@ -65,7 +65,7 @@ export default {
     height: 96px;
     width: 95px;
     border: 1px solid black;
-    border-radius: 3px;
+    border-radius: 5px;
 }
 
 .api-key {

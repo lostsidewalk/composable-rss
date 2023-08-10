@@ -10,10 +10,10 @@
 </template>
 
 <script setup>
-const compRssOriginUrl = import.meta.env.VITE_COMPRSS_ORIGIN_URL;
+const compRssOriginUrl = import.meta.env.VITE_COMPRSS_API_URL;
 
 function googleOauth2() {
-  window.location = compRssOriginUrl + '/oauth2/authorize/google?redirect_uri=' + process.env.VUE_APP_COMPRSS_ORIGIN_URL + '/app';
+  window.location = compRssOriginUrl + '/oauth2/authorize/google?redirect_uri=' + import.meta.env.VITE_COMPRSS_ORIGIN_URL + '/app';
 }
 </script>
 

@@ -30,8 +30,8 @@
                   <div class="col cols-12 cols-sm-8">
                     <div class="d-flex flex-col flex-wrap justify-center gap-1">
                       <!-- profile (tab 1)-->
-                      <AccountSettings v-show="tabToShow === 'ACCOUNT'" :authProvider="authProvider"
-                        :authProviderImgUrl="authProviderProfileImgUrl" @exportData="$emit('exportData')"
+                      <AccountSettings v-show="tabToShow === 'ACCOUNT'" :authProvider="account.authProvider"
+                        :authProviderProfileImgUrl="account.authProviderProfileImgUrl" @exportData="$emit('exportData')"
                         @finalizeDeactivation="$emit('finalizeDeactivation')"
                         @initPasswordReset="$emit('initPasswordReset')" />
                       <!-- email notifications (tab 2) -->
@@ -59,8 +59,8 @@
                         </div>
                       </div>
                       <!-- subscription (tab 3) -->
-                      <SubscriptionSettings v-show="tabToShow === 'SUBSCRIPTION'" v-if="hasSubscription" :subscription="subscription" 
-                        @cancelSubscription="$emit('cancelSubscription')" 
+                      <SubscriptionSettings v-show="tabToShow === 'SUBSCRIPTION'" v-if="hasSubscription"
+                        :subscription="subscription" @cancelSubscription="$emit('cancelSubscription')"
                         @resumeSubscription="$emit('resumeSubscription')" />
                       <!-- checkout (tab 3) -->
                       <div v-show="tabToShow === 'SUBSCRIPTION'" v-if="!hasSubscription" class="card m-4 elevation-6">
@@ -94,8 +94,8 @@ export default {
   },
   computed: {
     hasSubscription: function () {
-            return this.subscription.status ? this.subscription.status.length > 0 : false;
-        }
+      return this.subscription.status ? this.subscription.status.length > 0 : false;
+    }
   },
   emits: [
     "exportData",
@@ -110,11 +110,6 @@ export default {
   ],
   data() {
     return {
-      username: '',
-      emailAddress: '',
-      authProvider: 'LOCAL',
-      authProviderProfileImgUrl: null,
-      authProviderUsername: '',
       enableAccountAlerts: true,
       enableDailyFeedReport: true,
       enableProductNotifications: true,
@@ -125,17 +120,6 @@ export default {
     }
   },
   mounted() {
-    this.username = this.account.username;
-    if (this.account.emailAddress) {
-      this.emailAddress = this.account.emailAddress;
-    }
-    if (this.account.authProvider) {
-      this.authProvider = this.account.authProvider;
-    }
-    this.authProviderProfileImgUrl = this.account.authProviderProfileImgUrl;
-    if (this.account.authProviderUsername) {
-      this.authProviderUsername = this.account.authProviderUsername;
-    }
     let frameworkConfig = this.account.frameworkConfig;
     if (frameworkConfig) {
       let notifications = frameworkConfig.notifications;

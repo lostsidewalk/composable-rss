@@ -31,6 +31,8 @@ export default defineNuxtPlugin(({ vueApp }) => {
         "emailAddress": "Email Address",
         "submit": "Submit",
         "settings": "Settings",
+        "oAuth2ProfileImage": "OAuth2 Profile Image",
+        "settingsUpdated": "Your account settings have been updated",
         // 
         "thankYouForYourOrder": "THank you for your order!",
         "youAreNowVerified": "You are now verified.",
