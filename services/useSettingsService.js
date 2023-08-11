@@ -17,6 +17,7 @@ export function useSettingsService(props) {
   const deregisterUrl = compRssApiUrl + '/deregister';
   const orderUrl = compRssApiUrl + '/order';
   const subscriptionsUrl = compRssApiUrl + '/subscriptions';
+  const emailApiKeyUrl = compRssApiUrl + '/send_key';
 
   const auth = props.auth;
 
@@ -260,6 +261,48 @@ export function useSettingsService(props) {
       });
   }
 
+  function emailApiKey() {
+    settingsIsLoading.value = true;
+
+    auth.getTokenSilently().then((token) => {
+      const source = axios.CancelToken.source();
+
+      const requestOptions = {
+        method: 'POST',
+        url: emailApiKeyUrl,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        cancelToken: source.token
+      };
+
+      const timeoutId = setTimeout(() => source.cancel('Request timeout'), 15000);
+
+      axios(requestOptions)
+        .then((response) => {
+          if (response.status === 200) {
+            return; // response payload is ignored 
+          } else {
+            throw new Error('Unexpected response status: ' + response.status);
+          }
+        })
+        .then(() => {
+          setLastServerMessage('checkEmailForFurther');
+        })
+        .catch((error) => {
+          handleServerError(error);
+        })
+        .finally(() => {
+          clearTimeout(timeoutId);
+          settingsIsLoading.value = false;
+        });
+    }).catch((error) => {
+      handleServerError(error);
+      settingsIsLoading.value = false;
+    });
+  }
+
   function submitOrder() {
     settingsIsLoading.value = true;
 
@@ -424,6 +467,7 @@ export function useSettingsService(props) {
     exportData,
     finalizeDeactivation,
     initPasswordReset,
+    emailApiKey,
     submitOrder,
     cancelSubscription,
     resumeSubscription,

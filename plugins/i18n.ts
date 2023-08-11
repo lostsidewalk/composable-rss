@@ -54,6 +54,7 @@ export default defineNuxtPlugin(({ vueApp }) => {
         "subscription": "Subscription", // tab label 
         "defaultProfileImage" : "Default profile image",
         "emailApiKey": "Email API key",
+        "sendApiKeyEmail": "Send API key email",
         "deactivateAccount" : "Deactivate account",
         "emailNotifications" : "Email Notificatiohs",
         "enableAccountAlertsNotifications" : "Enable account alerts",

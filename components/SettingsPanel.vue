@@ -33,7 +33,8 @@
                       <AccountSettings v-show="tabToShow === 'ACCOUNT'" :authProvider="account.authProvider"
                         :authProviderProfileImgUrl="account.authProviderProfileImgUrl" @exportData="$emit('exportData')"
                         @finalizeDeactivation="$emit('finalizeDeactivation')"
-                        @initPasswordReset="$emit('initPasswordReset')" />
+                        @initPasswordReset="$emit('initPasswordReset')" 
+                        @emailApiKey="$emit('emailApiKey') "/>
                       <!-- email notifications (tab 2) -->
                       <div v-show="tabToShow === 'NOTIFICATIONS'" class="card m-4 elevation-6">
                         <div class="m-2 settings-option">
@@ -101,6 +102,7 @@ export default {
     "exportData",
     "finalizeDeactivation",
     "initPasswordReset",
+    "emailApiKey",
     "updateAccount",
     "updateNotificationPreferences",
     "toggleNotifications",

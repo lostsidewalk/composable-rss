@@ -9,12 +9,9 @@
                 max-width="96" />
         </div>
         <div class="card-actions">
-            <!-- send API key via email -->
-            <button class="text settings-button" v-if="!showDeactivateUser && !showResetPassword" size="small" @click="sendApiKeyViaEmail">
-                {{ $t('emailApiKey') }}
-            </button>
-            <!-- deactivate account button -->
-            <button class="text settings-button" v-if="!showDeactivateUser && !showResetPassword" size="small"
+
+            <!-- deactivate account button, shows the deactivate options (download data, permanently delete, cancel) -->
+            <button class="text settings-button" v-if="!showEmailApiKey && !showDeactivateUser && !showResetPassword" size="small"
                 @click="showDeactivateUser = true">
                 {{ $t('deactivateAccount') }}
             </button>
@@ -28,17 +25,41 @@
             <!-- cancel (deactivate account) button -->
             <button class="text settings-button" v-if="showDeactivateUser" id="cancelDeactivateAccount" size="small"
                 @click="showDeactivateUser = false">{{ $t('cancel') }}</button>
-            <button class="text settings-button" v-if="showResetPassword" size="small"
-                @click="$emit('initPasswordReset')">{{
-                    $t('sendPasswordResetEmail') }}</button>
-            <!-- reset password button (local) -->
+
+
+            <!-- reset password button (local), shows the reset password options (send password reset email, cancel) -->
             <button class="text settings-button"
-                v-if="authProvider === 'LOCAL' && !showResetPassword && !showDeactivateUser" id="resetPassword" size="small"
-                @click="showResetPassword = true">{{ $t('resetPassword')
-                }}</button>
+                v-if="authProvider === 'LOCAL' && !showEmailApiKey && !showResetPassword && !showDeactivateUser" size="small"
+                @click="showResetPassword = true">
+                {{ $t('resetPassword') }}
+            </button>
+            <!-- send password reset email -->
+            <button class="text settings-button" v-if="showResetPassword" size="small"
+                @click="$emit('initPasswordReset')">
+                {{ $t('sendPasswordResetEmail') }}
+            </button>
             <!-- cancel (reset password) -->
             <button class="text settings-button" v-if="showResetPassword" id="cancelResetPassword" size="small"
-                @click="showResetPassword = false">{{ $t('cancel') }}</button>
+                @click="showResetPassword = false">
+                {{ $t('cancel') }}
+            </button>
+
+            <!-- email API key button, shows the email API key options (send API key email, cancel) -->
+            <button class="text settings-button"
+                v-if="!showEmailApiKey && !showResetPassword && !showDeactivateUser" size="small"
+                @click="showEmailApiKey = true">
+                {{ $t('emailApiKey') }}
+            </button>
+            <!-- send password reset email -->
+            <button class="text settings-button" v-if="showEmailApiKey" size="small"
+                @click="$emit('emailApiKey')">
+                {{ $t('sendApiKeyEmail') }}
+            </button>
+            <!-- cancel (email API key) -->
+            <button class="text settings-button" v-if="showEmailApiKey" id="cancelEmailApiKey" size="small"
+                @click="showEmailApiKey = false">
+                {{ $t('cancel') }}
+            </button>
         </div>
     </div>
 </template>
@@ -49,12 +70,17 @@ export default {
         authProvider: { type: String, default: 'LOCAL' },
         authProviderProfileImgUrl: { type: String, required: false },
     },
-    emits: ["exportData", "finalizeDeactivation", "initPasswordReset"],
+    emits: [
+        "exportData", 
+        "finalizeDeactivation", 
+        "initPasswordReset",
+        "emailApiKey"
+    ],
     data() {
         return {
             showDeactivateUser: false,
             showResetPassword: false,
-            showApiKey: false,
+            showEmailApiKey: false,
         }
     }
 }

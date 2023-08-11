@@ -28,7 +28,8 @@
     <SettingsPanel class="panel" v-show="isAuthenticated" :account="roAccount" :subscription="roSubscription"
       :is-loading="roSettingsIsLoading" @exportData="exportData" @finalizeDeactivation="finalizeDeactivation"
       @initPasswordReset="initPasswordReset" @updateNotificationPreferences="updateNotificationPreferences"
-      @cancelSubscription="cancelSubscription" @resumeSubscription="resumeSubscription" @submitOrder="submitOrder" />
+      @cancelSubscription="cancelSubscription" @resumeSubscription="resumeSubscription" @submitOrder="submitOrder"
+      @emailApiKey="emailApiKey" />
 
     <div class="panel alert m-4 text-center info dark" v-if="roServerMessage">
       {{ roServerMessage }}
@@ -70,6 +71,7 @@ const {
   exportData,
   finalizeDeactivation,
   initPasswordReset,
+  emailApiKey,
   updateNotificationPreferences,
   cancelSubscription,
   resumeSubscription,
@@ -88,10 +90,10 @@ onMounted(() => {
 });
 
 function isValidTarget(target) {
-  return target === 'register' || 
-    target === 'pw_update' || 
-    target === 'pw_reset' || 
-    target === 'order_confirmed' || 
+  return target === 'register' ||
+    target === 'pw_update' ||
+    target === 'pw_reset' ||
+    target === 'order_confirmed' ||
     target === 'email_verification';
 }
 
