@@ -112,7 +112,7 @@ export function useAuthService() {
             withCredentials: true,
           })
           .then((response) => {
-            if (response.status === 200 && isJsonContent(response.headers['content-type'])) {
+            if (response.status === 200 && isJsonContent(response.headers)) {
               setupLoggedInSession(response.data);
               resolve(auth.token);
             } else {
@@ -134,8 +134,16 @@ export function useAuthService() {
     });
   }
 
-  function isJsonContent(contentType: string) {
-    return 'application/json' === contentType.toLowerCase();
+  function isJsonContent(headers: any) {
+    const headerKeys = Object.keys(headers);
+    for (let i = 0; i < headerKeys.length; i++) {
+      let key = headerKeys[i];
+      if (key.toLowerCase() === 'content-type') {
+        return 'application/json' === headers[key].toLowerCase();
+      }
+    }
+
+    return false;
   }
 
   // login methods

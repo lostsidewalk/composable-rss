@@ -40,9 +40,7 @@ export function useSettingsService(props) {
 
       axios.get(settingsUrl, requestOptions)
         .then((response) => {
-          let contentType = response.headers['Content-Type'];
-          let isJson = contentType && contentType.includes('application/json');
-
+          const isJson = isJsonContent(response.headers);
           if (response.status === 200) {
             return isJson ? response.data : {};
           } else {
@@ -122,10 +120,7 @@ export function useSettingsService(props) {
         if (response.status === 200) {
           return;
         } else {
-          const contentType = response.headers['content-type'];
-          const isJson = contentType && contentType.includes('application/json');
-
-          if (isJson) {
+          if (isJsonContent(response.headers)) {
             throw new Error(response.data.message + (response.data.details ? (': ' + response.data.details) : ''));
           } else {
             throw new Error(response.data);
@@ -323,9 +318,7 @@ export function useSettingsService(props) {
 
       axios(requestOptions)
         .then((response) => {
-          let contentType = response.headers['content-type'];
-          let isJson = contentType && contentType.includes('application/json');
-
+          const isJson = isJsonContent(response.headers);
           if (response.status === 200) {
             return isJson ? response.data : {};
           } else {
@@ -380,9 +373,7 @@ export function useSettingsService(props) {
             subscription.cancelAtPeriodEnd = true;
             setLastServerMessage('yourSubscriptionWasCanceledClickToResume');
           } else {
-            const contentType = response.headers['content-type'];
-            const isJson = contentType && contentType.includes('application/json');
-
+            const isJson = isJsonContent(response.headers);
             if (isJson) {
               throw new Error(response.data.message + (response.data.details ? (': ' + response.data.details) : ''));
             } else {
@@ -431,9 +422,7 @@ export function useSettingsService(props) {
             subscription.cancelAtPeriodEnd = false;
             setLastServerMessage('yourSubscriptionWasResumed');
           } else {
-            const contentType = response.headers['content-type'];
-            const isJson = contentType && contentType.includes('application/json');
-
+            const isJson = isJsonContent(response.headers);
             if (isJson) {
               throw new Error(response.data.message + (response.data.details ? (': ' + response.data.details) : ''));
             } else {
@@ -452,6 +441,19 @@ export function useSettingsService(props) {
       handleServerError(error);
       settingsIsLoading.value = false;
     });
+  }
+
+  function isJsonContent(headers) {
+    const headerKeys = Object.keys(headers);
+    for (let i = 0; i < headerKeys.length; i++) {
+      let key = headerKeys[i];
+      if (key.toLowerCase() === 'content-type') {
+        let headerValue = headers[key];
+        return 'application/json' === headerValue.toLowerCase();
+      }
+    }
+
+    return false;
   }
 
   const roAccount = readonly(account);
