@@ -22,11 +22,16 @@ export function useNotifications(props) {
     serverMessage.value = t(messageCode, args);
   }
 
+  function clearServerMessage() {
+    serverMessage.value = null;
+  }
+
   const roServerMessage = readonly(serverMessage);
 
   return {
     roServerMessage, 
     handleServerError, 
     setLastServerMessage,
+    clearServerMessage,
   }
 }

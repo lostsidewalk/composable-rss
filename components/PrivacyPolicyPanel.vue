@@ -1,105 +1,21 @@
 <template>
   <div class="card">
-    <div class="card-title pa-4">
-      {{ $t('compRssPrivacyPolicy') }}
-    </div>
+    <div class="card-title pa-4">{{ $t('compRssPrivacyPolicy') }}</div>
     <div class="divider" />
     <div class="card-text">
       <div class="sheet">
-        <div class="card m-4 elevation-6">
-          <div class="card-title pa-4">
-            {{ $t('whatInformationDoWeCollect') }}
-          </div>
-          <div class="card-subtitle">
-            {{ $t('whatWeCollectSummary') }}
-          </div>
-          <div class="card-text">
-            {{ $t('whatWeCollectDetails') }}
+        <div v-for="section in privacyPolicySections" :key="section.id">
+          <div class="card m-4 elevation-6 shadow-md">
+            <div class="card-title pa-4">{{ section.title }}</div>
+            <div class="card-subtitle">{{ section.subtitle }}</div>
+            <div class="card-text">{{ section.text }}</div>
           </div>
         </div>
         <div class="card m-4 elevation-6">
-          <div class="card-title pa-4">
-            {{ $t('whatWeCollectImportantDetails') }}
-          </div>
-          <div class="card-subtitle">
-            {{ $t('whatWeCollectFurtherDetails') }}
-          </div>
-          <div class="card-text">
-            {{ $t('someCollectionIsAutomatic') }} {{ $t('automaticCollectionDetails') }}
-          </div>
-        </div>
-        <div class="card m-4 elevation-6">
-          <div class="card-title pa-4">
-            {{ $t('howDoWeProcess') }}
-          </div>
-          <div class="card-subtitle">
-            {{ $t('howDoWeProcessSummary') }}
-          </div>
-          <div class="card-text" />
-        </div>
-        <div class="card m-4 elevation-6">
-          <div class="card-title pa-4">
-            {{ $t('socialLogins') }}
-          </div>
-          <div class="card-subtitle">
-            {{ $t('socialLoginsSummary') }}
-          </div>
-          <div class="card-text">
-            {{ $t('socialLoginsDetails') }}
-          </div>
-        </div>
-        <div class="card m-4 elevation-6">
-          <div class="card-title pa-4">
-            {{ $t('internationalInformationTransfers') }}
-          </div>
-          <div class="card-subtitle">
-            {{ $t('internationalInformationTransfersSummary') }}
-          </div>
-          <div class="card-text">
-            {{ $t('internationalInformationTransfersDetails') }} {{ $t('internationalInformationTransfersDetailsFurther')
-            }}
-          </div>
-        </div>
-        <div class="card m-4 elevation-6">
-          <div class="card-title pa-4">
-            {{ $t('whatAreYourPrivacyRights') }}
-          </div>
-          <div class="card-subtitle">
-            {{ $t('yourPrivacyRightsSummary') }}
-          </div>
-          <div class="card-text">
-            {{ $t('yourPrivacyRightsDetails') }}
-          </div>
-        </div>
-        <div class="card m-4 elevation-6">
-          <div class="card-title pa-4">
-            {{ $t('yourConsent') }}
-          </div>
-          <div class="card-subtitle">
-            {{ $t('yourConsentSummary') }}
-          </div>
-          <div class="card-text" />
-        </div>
-        <div class="card m-4 elevation-6">
-          <div class="card-title pa-4">
-            {{ $t('doWeMakeUpdates') }}
-          </div>
-          <div class="card-subtitle">
-            {{ $t('doWeMakeUpdatesSummary') }}
-          </div>
-          <div class="card-text" />
-        </div>
-        <div class="card m-4 elevation-6">
-          <div class="card-title pa-4">
-            {{ $t('howCanYouContactUs') }}
-          </div>
-          <div class="card-subtitle">
-            {{ $t('contactUsWithQuestionsViaEmail') }}
-          </div>
+          <div class="card-title pa-4">{{ $t('howCanYouContactUs') }}</div>
+          <div class="card-subtitle">{{ $t('contactUsWithQuestionsViaEmail') }}</div>
           <div class="card-actions">
-            <button size="small" type="text" @click="sendSupportMail">
-              support@lostsidewalk.com
-            </button>
+            <button size="small" type="text" @click="sendSupportMail">{{ $t('supportEmail') }}</button>
           </div>
         </div>
       </div>
@@ -109,7 +25,7 @@
     </div>
   </div>
 </template>
-  
+
 <script>
 export default {
   name: "PrivacyPolicyPanel",
@@ -118,6 +34,60 @@ export default {
     sendSupportMail() {
       window.open('mailto:support@lostsidewalk.com', '_blank');
     },
+  },
+  data() {
+    return {
+      privacyPolicySections: [
+        {
+          id: 1,
+          title: this.$t('whatInformationDoWeCollect'),
+          subtitle: this.$t('whatWeCollectSummary'),
+          text: this.$t('whatWeCollectDetails'),
+        },
+        {
+          id: 2,
+          title: this.$t('whatWeCollectImportantDetails'),
+          subtitle: this.$t('whatWeCollectFurtherDetails'),
+          text: `${this.$t('someCollectionIsAutomatic')} ${this.$t('automaticCollectionDetails')}`,
+        },
+        {
+          id: 3,
+          title: this.$t('howDoWeProcess'),
+          subtitle: this.$t('howDoWeProcessSummary'),
+          text: '',
+        },
+        {
+          id: 4,
+          title: this.$t('socialLogins'),
+          subtitle: this.$t('socialLoginsSummary'),
+          text: this.$t('socialLoginsDetails'),
+        },
+        {
+          id: 5,
+          title: this.$t('internationalInformationTransfers'),
+          subtitle: this.$t('internationalInformationTransfersSummary'),
+          text: `${this.$t('internationalInformationTransfersDetails')} ${this.$t('internationalInformationTransfersDetailsFurther')}`,
+        },
+        {
+          id: 6,
+          title: this.$t('whatAreYourPrivacyRights'),
+          subtitle: this.$t('yourPrivacyRightsSummary'),
+          text: this.$t('yourPrivacyRightsDetails'),
+        },
+        {
+          id: 7,
+          title: this.$t('yourConsent'),
+          subtitle: this.$t('yourConsentSummary'),
+          text: '',
+        },
+        {
+          id: 8,
+          title: this.$t('doWeMakeUpdates'),
+          subtitle: this.$t('doWeMakeUpdatesSummary'),
+          text: '',
+        },
+      ],
+    };
   },
 };
 </script>

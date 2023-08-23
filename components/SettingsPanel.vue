@@ -1,75 +1,73 @@
 <template>
   <div class="settings-panel">
-    <!-- row -->
-    <div class="d-flex row text-center justify-center">
-      <!-- col -->
-      <div class="cols-12 cols-sm-10">
-        <!-- card -->
+    <div class="flex row text-center justify-center">
+      <div class="flex-grow cols-sm-10">
         <div @mouseover="isHovering = true" @mouseleave="isHovering = false"
-          :class="isHovering ? 'elevation-7' : 'elevation-6'" class="card flat">
-          <!-- row -->
+          :class="{ 'elevation-7': isHovering, 'elevation-6': !isHovering }" class="card flat shadow-md">
           <div class="row">
-            <!-- col -->
-            <div class="col cols-12">
-              <!-- card-text -->
+            <div class="col flex-grow">
+              <div class="card-title">{{ $t("settings") }}</div>
               <div class="card-text">
-                <!-- banner (large) -->
-                <div class="text-h5 text-center mt-4 logotext">
-                  {{ $t("settings") }}
+                <div class="row gap-5">
+                  <div class="col flex-grow cols-sm-8 m-4">
+                    <button class="settings-tab rounded shadow-md" @click="setTab('ACCOUNT')"
+                      :class="{ 'active': tabToShow === 'ACCOUNT' }">
+                      {{ $t('account') }}
+                    </button>
+                    <button class="settings-tab rounded shadow-md" @click="setTab('NOTIFICATIONS')"
+                      :class="{ 'active': tabToShow === 'NOTIFICATIONS' }">
+                      {{ $t('notifications') }}
+                    </button>
+                    <button class="settings-tab rounded shadow-md" @click="setTab('SUBSCRIPTION')"
+                      :class="{ 'active': tabToShow === 'SUBSCRIPTION' }">
+                      {{ $t('subscription') }}
+                    </button>
+                  </div>
                 </div>
-                <!-- tab switcher -->
-                <div class="d-flex justify-center gap-5 flex-wrap">
-                  <button class="text settings-tab" @click="tabToShow = 'ACCOUNT'">{{ $t('account') }}</button>
-                  <button class="text settings-tab" @click="tabToShow = 'NOTIFICATIONS'">{{ $t('notifications')
-                  }}</button>
-                  <button class="text settings-tab" @click="tabToShow = 'SUBSCRIPTION'">{{ $t('subscription') }}</button>
-                </div>
-                <!-- row -->
                 <div class="row text-center">
-                  <!-- col -->
-                  <div class="col cols-12 cols-sm-8">
-                    <div class="d-flex flex-col flex-wrap justify-center gap-1">
-                      <!-- profile (tab 1)-->
-                      <AccountSettings v-show="tabToShow === 'ACCOUNT'" :authProvider="account.authProvider"
+                  <div class="col flex-grow cols-sm-8">
+                    <div class="flex flex-col flex-wrap justify-center gap-1">
+                      <AccountSettings v-show="tabToShow === 'ACCOUNT'" v-if="account" :authProvider="account.authProvider"
                         :authProviderProfileImgUrl="account.authProviderProfileImgUrl" @exportData="$emit('exportData')"
+                        :emailAddress="account.emailAddress"
+                        :apiKey="account.apiKey"
+                        :totalPosts="1"
+                        :totalQueues="2"
                         @finalizeDeactivation="$emit('finalizeDeactivation')"
-                        @initPasswordReset="$emit('initPasswordReset')" 
-                        @emailApiKey="$emit('emailApiKey') "/>
-                      <!-- email notifications (tab 2) -->
-                      <div v-show="tabToShow === 'NOTIFICATIONS'" class="card m-4 elevation-6">
+                        @initPasswordReset="$emit('initPasswordReset')" @emailApiKey="$emit('emailApiKey')" />
+                      <div v-show="tabToShow === 'NOTIFICATIONS'" class="card m-4">
                         <div class="m-2 settings-option">
                           <input type="checkbox" id="enableAccountAlerts" v-model="enableAccountAlerts"
                             name="enableAccountAlerts" />
-                          <label class="ml-1" for="enableAccountAlerts">{{ $t('enableAccountAlertsNotifications')
-                          }}</label>
+                          <label class="ml-1" for="enableAccountAlerts">
+                            {{ $t('enableAccountAlertsNotifications') }}
+                          </label>
                         </div>
                         <div class="m-2 settings-option">
                           <input type="checkbox" id="enableProductNotifications" v-model="enableProductNotifications"
                             name="enableProductNotifications" />
-                          <label class="ml-1" for="enableProductNotifications">{{ $t('enableProductNotifications')
-                          }}</label>
+                          <label class="ml-1" for="enableProductNotifications">
+                            {{ $t('enableProductNotifications') }}
+                          </label>
                         </div>
                         <div class="divider" />
-                        <div class="card-actions d-flex flex-col">
-                          <!-- update notification preferences button -->
-                          <button class="text settings-button" id="updateNotificationPreferences" size="small" @click="$emit('updateNotificationPreferences', {
-                              enableAccountAlerts: enableAccountAlerts,
-                              enableDailyFeedReport: enableDailyFeedReport,
-                              enableProductNotifications: enableProductNotifications
-                            })">{{ $t('updateNotificationPreferences') }}</button>
+                        <div class="card-actions">
+                          <button class="settings-button rounded shadow-md" id="updateNotificationPreferences"
+                            size="small" @click="updateNotificationPreferences">
+                            {{ $t('updateNotificationPreferences') }}
+                          </button>
                         </div>
                       </div>
-                      <!-- subscription (tab 3) -->
-                      <SubscriptionSettings v-show="tabToShow === 'SUBSCRIPTION'" v-if="hasSubscription"
+                      <SubscriptionSettings v-show="tabToShow === 'SUBSCRIPTION' && hasSubscription"
                         :subscription="subscription" @cancelSubscription="$emit('cancelSubscription')"
                         @resumeSubscription="$emit('resumeSubscription')" />
-                      <!-- checkout (tab 3) -->
-                      <div v-show="tabToShow === 'SUBSCRIPTION'" v-if="!hasSubscription" class="card m-4 elevation-6">
-                        <div class="card-text d-flex flex-row">
+                      <div v-show="tabToShow === 'SUBSCRIPTION' && !hasSubscription" class="card m-4">
+                        <div class="card-text flex flex-row">
                           <span class="m-4">{{ $t('supportComposableRSS') }}</span>
                         </div>
                         <div class="card-actions">
-                          <button class="text settings-button" id="checkout" size="small" @click="$emit('submitOrder')">
+                          <button class="settings-button rounded shadow-md" id="checkout" size="small"
+                            @click="$emit('submitOrder')">
                             {{ $t('checkout') }}
                           </button>
                         </div>
@@ -94,9 +92,9 @@ export default {
     subscription: { type: Object, default: {} },
   },
   computed: {
-    hasSubscription: function () {
+    hasSubscription() {
       return this.subscription.status ? this.subscription.status.length > 0 : false;
-    }
+    },
   },
   emits: [
     "exportData",
@@ -113,43 +111,27 @@ export default {
   data() {
     return {
       enableAccountAlerts: true,
-      enableDailyFeedReport: true,
       enableProductNotifications: true,
-      showDeactivateUser: false,
-      showResetPassword: false,
       isHovering: false,
-      tabToShow: 'ACCOUNT', // 'NOTIFICATIONS' || 'SUBSCRIPTION' 
-    }
-  },
-  mounted() {
-    let frameworkConfig = this.account.frameworkConfig;
-    if (frameworkConfig) {
-      let notifications = frameworkConfig.notifications;
-      if (notifications) {
-        this.enableAccountAlerts = this.isTrue(notifications.accountAlerts);
-        this.enableDailyFeedReport = this.isTrue(notifications.dailyFeedReport);
-        this.enableProductNotifications = this.isTrue(notifications.productNotifications);
-      }
-    }
+      tabToShow: "ACCOUNT", // 'NOTIFICATIONS' || 'SUBSCRIPTION'
+    };
   },
   methods: {
-    isTrue(b) {
-      if (!b) {
-        return false;
-      } else if (b.toLowerCase() === 'true') {
-        return true;
-      }
-      return false;
-    }
-  }
-}
+    setTab(tab) {
+      this.tabToShow = tab;
+    },
+    updateNotificationPreferences() {
+      this.$emit("updateNotificationPreferences", {
+        enableAccountAlerts: this.enableAccountAlerts,
+        enableDailyFeedReport: this.enableDailyFeedReport,
+        enableProductNotifications: this.enableProductNotifications,
+      });
+    },
+  },
+};
 </script>
 
 <style scoped>
-.logotext {
-  font-family: "Russo One" !important;
-}
-
 .settings-panel {
   padding: 2rem;
 }
@@ -161,13 +143,13 @@ export default {
 .settings-tab {
   font-family: 'Russo One';
   padding: 1rem;
+  margin: .4rem;
   max-width: fit-content;
   user-select: none;
-  border-bottom: 1px solid transparent;
+  border: 1px solid slateblue;
 }
 
-.settings-tab:hover,
-.settings-tab:focus-visible {
-  border-bottom: 1px solid lightgrey;
+.settings-tab.active {
+  background-color: lightgray;
 }
 </style>

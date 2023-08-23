@@ -9,7 +9,7 @@ export default defineNuxtPlugin(({ vueApp }) => {
       en: {
         "composableRss": "ComposableRSS",
         "authentication": "Authentication",
-        "apiDocs": "API Documentation", 
+        "apiDocs": "{name} API Version {version} Documentation", 
         "footer": "Footer", 
         // 
         "loginToComposableRss": "Login to ComposableRSS",
@@ -18,11 +18,12 @@ export default defineNuxtPlugin(({ vueApp }) => {
         "username": "Username",
         "password": "Password",
         "login": "Login",
-        "accountRecoveryHere": "-- account recovery here --",
-        "alreadyHaveAnAccount": "-- login here --",
-        "registerHere": "-- register here --",
+        "accountRecoveryHere": "Account recovery",
+        "alreadyHaveAnAccount": "Sign-In",
+        "registerHere": "Register",
         "privacyPolicy": "Privacy Policy",
         "signinWithGoogle": "Sign-In with Google",
+        "logout": "Logout",
         // 
         "usernameAndPasswordAreRequired": "Username and password are required",
         "usernameIsRequired": "Username is required",
@@ -53,8 +54,8 @@ export default defineNuxtPlugin(({ vueApp }) => {
         "notifications": "Notifications", // tab label 
         "subscription": "Subscription", // tab label 
         "defaultProfileImage" : "Default profile image",
-        "emailApiKey": "Email API key",
-        "sendApiKeyEmail": "Send API key email",
+        "emailApiKey": "Email API credentials",
+        "sendApiKeyEmail": "Send API credentials email",
         "deactivateAccount" : "Deactivate account",
         "emailNotifications" : "Email Notificatiohs",
         "enableAccountAlertsNotifications" : "Enable account alerts",
@@ -88,6 +89,20 @@ export default defineNuxtPlugin(({ vueApp }) => {
         "systemMessage": "ComposableRSS Message",
         "somethingHorribleHappened": "Something horrible happened",
         "somethingHorribleHappenedDueTo": "Something horrible happened due to: {cause}",
+        // 
+        "yourEmailAddressIs": "Email Address: {emailAddress}",
+        "yourApiKeyIs": "API Key: {apiKey}",
+        "youHaveXPostsInYQueues": "You hve a total of {x} posts in {y} queues.",
+        // 
+        "apiRequiresTWoHeaderValues": "The ComposableRSS API requires two header values to be present in each request:",
+        "apiSecret": "API Secret",
+        "apiSecretHasBeeenMailed": "The 'API secret' value has been emailed to you.  Click the verification link in that email to activate your API credentials.",
+        "instructionsLocatedBelow": "Instructions for using the API, including examples with cURL, are located below.",
+        // 
+        "youAreAboutToPermanentlyDeactivateYourAccount": "You are about to permanently deactivate your account. You can register a new account at any time. Please download your data before you go, as it will be irretrievable after your permanently delete your account.",
+        "thanksForBeingPartOfComposableRSS": "Thanks for being part of the ComposableRSS community!",
+        // 
+        "weWillSendYourApiKeyViaEmail": "We will send your API secret value to your registered email address."
       }
     }
   })

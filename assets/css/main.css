@@ -25,25 +25,20 @@ body {
 }
 
 .elevation-1 {
-    border: 1px solid slateblue;
-    box-shadow: 1px 1px 2px slateblue;
+    border: 1px solid slategray;
 }
 
 .elevation-6 {
-    border: 2px solid transparent;
-    box-shadow: 5px 5px 3px slateblue;
+    border: 2px solid slategray;
 }
 
 .elevation-7 {
     border: 2px solid slateblue;
-    box-shadow: 5px 5px 4px slateblue;
-}
-
-.justify-center {
-    justify-content: center;
 }
 
 .card {
+    display: flex;
+    flex-direction: column;
     border-radius: 5px;
     box-shadow: 1px 1px 4px lightgrey;
 }
@@ -51,10 +46,15 @@ body {
 .card-title {
     font-weight: bold;
     text-align: center;
+    border-bottom: 1px solid lightgrey;
+    font-size: x-large;
+    text-align: center;
+    margin: .4rem;
+    font-family: "Russo One" !important;
 }
 
 .card-text {
-    font-weight: lighter;
+    /* font-weight: lighter; */
 }
 
 .card-subtitle {
@@ -62,44 +62,24 @@ body {
     text-align: center;
 }
 
-.text {
-    border: 0;
-}
-
-.text:hover {
-    text-decoration: underline;
-}
-
-.outlined {
-    border: 1px solid slateblue;
-    border-radius: 3px;
-}
-
-.flex-grow-1 {
-    flex-grow: 1;
-}
-
-.d-flex {
+.card-actions {
     display: flex;
-}
-
-.text-xxl {
-    font-size: xx-large;
-}
-
-.p-4 {
-    padding: .4rem;
-}
-
-.flex-wrap {
     flex-wrap: wrap;
+    flex-grow: 1;
+    flex-direction: row;
+    gap: 1rem;
+    padding: 1rem;
+    border-top: 1px solid lightgrey;
+    justify-content: center;
 }
 
 .settings-button {
     font-family: 'Russo One';
     padding: 1rem;
-    max-width: fit-content;
+    width: 20vw;
+    min-width: fit-content;
     user-select: none;
+    border: 1px solid slateblue;
 }
 
 .settings-option {
@@ -108,6 +88,13 @@ body {
     text-align: initial;
     font-weight: normal;
     user-select: none;
+}
+
+.settings-option, .settings-option > * {
+    cursor: pointer;
+}
+.settings-option:hover {
+    text-decoration: underline;
 }
 
 .settings-label {

@@ -1,26 +1,26 @@
 <template>
-    <div class="footer">
+    <div class="footer m-4">
         <hr class="m-8" />
-        <div class="d-flex justify-center gap-10 flex-wrap">
-            <button @click.prevent="devBlog" size="small" class="text">
+        <div class="flex justify-center gap-10 flex-wrap">
+            <button @click.prevent="devBlog" size="small" class="border-0">
                 {{ $t('devBlog') }}
             </button>
-            <button @click="showPrivacyPolicy = !showPrivacyPolicy" size="small" class="text">
+            <button @click="showPrivacyPolicy = !showPrivacyPolicy" size="small" class="border-0">
                 {{ $t('privacyPolicy') }}
             </button>
-            <button @click.prevent="sendSupportMail" size="small" class="text">
+            <button @click.prevent="sendSupportMail" size="small" class="border-0">
                 {{ $t('email') }}
             </button>
-            <button @click.prevent="twitter" size="small" class="text">
+            <button @click.prevent="twitter" size="small" class="border-0">
                 {{ $t('twitter') }}
             </button>
-            <button @click.prevent="github" size="small" class="text">
+            <button @click.prevent="github" size="small" class="border-0">
                 {{ $t('github') }}
             </button>
-            <button @click.prevent="twitch" size="small" class="text">
+            <button @click.prevent="twitch" size="small" class="border-0">
                 {{ $t('twitch') }}
             </button>
-            <button @click.prevent="discord" size="small" class="text">
+            <button @click.prevent="discord" size="small" class="border-0">
                 {{ $t('discord') }}
             </button>
         </div>

@@ -1,47 +1,33 @@
 <template>
   <div class="registration-request-panel">
-    <!-- row -->
-    <div class="d-flex row text-center justify-center">
-      <!-- col -->
-      <div class="cols-12 cols-sm-10">
-        <!-- card -->
+    <div class="flex row text-center justify-center">
+      <div class="flex-grow cols-sm-10">
         <div @mouseover="isHovering = true" @mouseleave="isHovering = false"
-          :class="isHovering ? 'elevation-7' : 'elevation-6'"
-          class="card flat">
-          <!-- row -->
+          :class="{ 'elevation-7': isHovering, 'elevation-6': !isHovering }" class="card flat shadow-md">
           <div class="row">
-            <!-- col -->
-            <div class="col cols-12">
-              <!-- card-text -->
+            <div class="col flex-grow">
+              <div class="card-title">{{ $t("accountRegistration") }}</div>
               <div class="card-text">
-                <!-- banner (large) -->
-                <div class="text-h5 text-center m-4 logotext">
-                  {{ $t("accountRegistration") }}
-                </div>
-                <!-- row -->
                 <div class="row text-center">
-                  <!-- col -->
-                  <div class="col cols-12 cols-sm-8">
-                    <div class="d-flex flex-row flex-wrap justify-center gap-1">
-                      <!-- email address -->
+                  <div class="col flex-grow cols-sm-8">
+                    <div class="flex flex-row flex-wrap justify-center gap-1">
                       <AuthTextField class="m-4" :label="$t('emailAddress')" :placeholder="$t('emailAddress')"
-                        :model-value="email" @update:modelValue="email = $event" />
-                      <!-- username -->
+                        v-model="email" />
                       <AuthTextField class="m-4" :label="$t('username')" :placeholder="$t('username')"
-                        :model-value="username" @update:modelValue="username = $event" />
-                      <!-- password -->
+                        v-model="username" />
                       <AuthTextField type="password" class="m-4" :label="$t('password')" :placeholder="$t('password')"
-                        :model-value="password" @update:modelValue="password = $event" />
+                        v-model="password" />
                     </div>
-                    <div class="d-flex flex-row flex-wrap justify-center">
-                      <!-- submit button -->
-                      <AuthButton class="m-4" :label="$t('submit')" :is-loading="isLoading"
-                        @clicked="$emit('submit', { username: username, email: email, password: password, userType: userType })" />
+                    <div class="flex flex-row flex-wrap justify-center">
+                      <AuthButton class="m-4" :label="$t('submit')" :is-loading="isLoading" @clicked="emitSubmit" />
                     </div>
-                    <AuthPanelLink @go="$emit('pw_reset')" :message="$t('accountRecoveryHere')" />
-                    <AuthPanelLink @go="$emit('auth')" :message="$t('alreadyHaveAnAccount')" />
+                    <hr />
+                    <AuthButton class="m-4" :label="$t('accountRecoveryHere')" :tooltip="$t('accountRecoveryHere')"
+                      :is-loading="isLoading" @clicked="emitPwReset" />
+                    <AuthButton class="m-4" :label="$t('alreadyHaveAnAccount')" :tooltip="$t('alreadyHaveAnAccount')"
+                      :is-loading="isLoading" @clicked="emitAuth" />
                     <AuthServerResponse :server-message="serverMessage" />
-                    <button class="pa-2 text" :text="$t('privacyPolicy')"
+                    <button class="pa-2 border-0" :text="$t('privacyPolicy')"
                       @click="showPrivacyPolicy = !showPrivacyPolicy" />
                     <div class="dialog" v-if="showPrivacyPolicy" fullscreen scrollable>
                       <PrivacyPolicyPanel @dismiss="showPrivacyPolicy = false" />
@@ -67,22 +53,33 @@ export default {
   emits: ["submit", "auth", "pw_reset"],
   data() {
     return {
-      username: '',
-      email: '',
-      password: '',
-      userType: null,
+      username: "",
+      email: "",
+      password: "",
       showPrivacyPolicy: false,
       isHovering: false,
-    }
+    };
   },
-}
+  methods: {
+    emitSubmit() {
+      this.$emit("submit", {
+        username: this.username,
+        email: this.email,
+        password: this.password,
+        userType: this.userType,
+      });
+    },
+    emitPwReset() {
+      this.$emit("pw_reset");
+    },
+    emitAuth() {
+      this.$emit("auth");
+    },
+  },
+};
 </script>
 
 <style scoped>
-.logotext {
-  font-family: "Russo One" !important;
-}
-
 .registration-request-panel {
   padding: 2rem;
 }

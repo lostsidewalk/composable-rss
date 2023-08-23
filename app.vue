@@ -1,5 +1,7 @@
 <template>
   <div class="app">
+    <LogoutButton v-if="isAuthenticated" @logout="logout" />
+
     <Banner class="panel" />
 
     <div v-show="formToShow === 'order_confirmed'" class="panel alert m-4 text-center info dark">
@@ -25,15 +27,15 @@
     <PasswordUpdatePanel class="panel" v-show="!isAuthenticated && formToShow === 'pw_update'"
       :server-message="pwUpdateServerMessage" :is-loading="pwUpdateIsLoading" @submit="submitPwUpdate" />
 
-    <SettingsPanel class="panel" v-show="isAuthenticated" :account="roAccount" :subscription="roSubscription"
+    <SettingsPanel class="panel" v-if="isAuthenticated" :account="roAccount" :subscription="roSubscription"
       :is-loading="roSettingsIsLoading" @exportData="exportData" @finalizeDeactivation="finalizeDeactivation"
       @initPasswordReset="initPasswordReset" @updateNotificationPreferences="updateNotificationPreferences"
       @cancelSubscription="cancelSubscription" @resumeSubscription="resumeSubscription" @submitOrder="submitOrder"
       @emailApiKey="emailApiKey" />
 
-    <div class="panel alert m-4 text-center info dark" v-if="roServerMessage">
+    <AlertBox class="m-8 panel" v-if="roServerMessage" @dismissAlert="clearServerMessage">
       {{ roServerMessage }}
-    </div>
+    </AlertBox>
 
     <DocsPanel class="panel" />
 
@@ -60,7 +62,10 @@ const {
 
 const notification = useNotifications({ t });
 
-const { roServerMessage } = notification;
+const { 
+  roServerMessage,
+  clearServerMessage,
+} = notification;
 
 const {
   roAccount,
@@ -255,6 +260,7 @@ watch(isAuthenticated, (newIsAuthenticated) => {
 .app {
   display: flex;
   flex-direction: column;
+  contain: content;
 }
 
 .order-confirmed {

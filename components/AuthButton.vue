@@ -1,6 +1,6 @@
 <template>
   <button
-    class="auth-button elevation-1"
+    class="auth-button elevation-1 shadow-md rounded"
     :class="{ 'loading': isLoading }"
     @click="$emit('clicked')"
   >
@@ -33,7 +33,8 @@ export default {
 .auth-button {
   font-family: 'Russo One';
   padding: 1rem;
-  max-width: fit-content;
+  width: 20vw;
+  min-width: fit-content;
   user-select: none;
 }
 </style>
