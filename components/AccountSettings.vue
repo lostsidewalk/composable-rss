@@ -17,7 +17,7 @@
       </div>
     </div>
     <AlertBox class="m-4" v-if="showFirstTimeUsageAlert && !showDeactivateUser"
-      @dismissAlert="suppressFirstTimeUsageAlert">
+      @dismissAlert="suppressFirstTimeUsageAlert" priority="INFO">
       <div class="flex flex-col gap-2 text-left">
         <div>{{ $t('apiRequiresTWoHeaderValues') }}</div>
         <div>
@@ -44,7 +44,7 @@
         </div>
       </div>
     </AlertBox>
-    <AlertBox class="m-4" v-if="showEmailApiKey" :showDismiss="false">
+    <AlertBox class="m-4" v-if="showEmailApiKey" :showDismiss="false" :priority="'INFO'">
       {{ $t('weWillSendYourApiKeyViaEmail') }}
     </AlertBox>
     <div class="card-actions">

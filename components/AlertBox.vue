@@ -1,6 +1,7 @@
 <template>
-    <div class="bg-red-100 p-4 rounded-lg shadow-md">
-      <button v-if="showDismiss" @click="dismissAlert" class="float-right text-red-500 hover:text-red-800">
+    <div class=" p-4 rounded-lg shadow-md" :class="{'bg-blue-100': (priority === 'INFO'), 'bg-red-100': (priority === 'ERROR') }">
+      <button v-if="showDismiss" @click="dismissAlert" class="float-right" 
+        :class="{ 'text-blue-500 hover:text-blue-800': (priority === 'INFO'), 'text-red-500 hover:text-red-800': (priority === 'ERROR') }">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="h-6 w-6"
@@ -24,7 +25,8 @@
   export default {
     props: {
       showDismiss: { type: Boolean, default: true },
-      message: { type: String }
+      message: { type: String },
+      priority: { type: String, default: 'ERROR' }
     },
     methods: {
       dismissAlert() {

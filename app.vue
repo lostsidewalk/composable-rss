@@ -1,6 +1,6 @@
 <template>
-  <div class="app">
-    <LogoutButton v-if="isAuthenticated" @logout="logout" />
+  <div class="app" v-if="tokenRefreshAttemptComplete">
+    <LogoutButton :disabled="!isAuthenticated" @logout="logout" />
 
     <Banner class="panel" />
 
@@ -27,7 +27,7 @@
     <PasswordUpdatePanel class="panel" v-show="!isAuthenticated && formToShow === 'pw_update'"
       :server-message="pwUpdateServerMessage" :is-loading="pwUpdateIsLoading" @submit="submitPwUpdate" />
 
-    <SettingsPanel class="panel" v-if="isAuthenticated" :account="roAccount" :subscription="roSubscription"
+    <SettingsPanel class="panel" v-show="isAuthenticated" :account="roAccount" :subscription="roSubscription"
       :is-loading="roSettingsIsLoading" @exportData="exportData" @finalizeDeactivation="finalizeDeactivation"
       @initPasswordReset="initPasswordReset" @updateNotificationPreferences="updateNotificationPreferences"
       @cancelSubscription="cancelSubscription" @resumeSubscription="resumeSubscription" @submitOrder="submitOrder"
@@ -114,6 +114,8 @@ const pwResetIsLoading = ref(false);
 const pwUpdateIsLoading = ref(false);
 // form to display 
 const formToShow = ref(null);
+// 
+const tokenRefreshAttemptComplete = ref(false);
 
 // TODO: use this method somewhere (button) 
 function logout() {
@@ -243,6 +245,7 @@ function refreshToken() {
       } else {
         console.log("app: not authenticated on mount");
       }
+      tokenRefreshAttemptComplete.value = true;
     });
 }
 
