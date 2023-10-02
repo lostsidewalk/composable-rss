@@ -9,14 +9,11 @@ export function useSettingsService(props) {
 
   const settingsIsLoading = ref(false);
   const account = reactive({});
-  const subscription = reactive({});
 
   let compRssApiUrl = import.meta.env.VITE_COMPRSS_API_URL;
   const settingsUrl = compRssApiUrl + '/settings';
   const exportUrl = compRssApiUrl + '/export';
   const deregisterUrl = compRssApiUrl + '/deregister';
-  const orderUrl = compRssApiUrl + '/order';
-  const subscriptionsUrl = compRssApiUrl + '/subscriptions';
   const emailApiKeyUrl = compRssApiUrl + '/send_key';
 
   const auth = props.auth;
@@ -61,14 +58,9 @@ export function useSettingsService(props) {
             authProvider: data.authProvider,
             authProviderProfileImgUrl: data.authProviderProfileImgUrl,
             authProviderUsername: data.authProviderUsername,
-            frameworkConfig: data.frameworkConfig
+            frameworkConfig: data.frameworkConfig,
+            apiKey: data.apiKey,
           });
-          if (data.subscription) {
-            Object.keys(subscription).forEach((key) => {
-              delete subscription[key];
-            });
-            Object.assign(subscription, data.subscription);
-          }
         })
         .catch((error) => {
           handleServerError(error);
@@ -85,15 +77,11 @@ export function useSettingsService(props) {
 
   function updateNotificationPreferences(updateNotificationRequest) {
     const enableAccountAlerts = updateNotificationRequest.enableAccountAlerts;
-    const enableDailyFeedReport = updateNotificationRequest.enableDailyFeedReport;
-    const enableProductNotifications = updateNotificationRequest.enableProductNotifications;
 
     const newSettings = {
       frameworkConfig: {
         notifications: {
           accountAlerts: enableAccountAlerts,
-          dailyFeedReport: enableDailyFeedReport,
-          productNotifications: enableProductNotifications,
         }
       }
     };
@@ -298,151 +286,6 @@ export function useSettingsService(props) {
     });
   }
 
-  function submitOrder() {
-    settingsIsLoading.value = true;
-
-    auth.getTokenSilently().then((token) => {
-      const source = axios.CancelToken.source();
-
-      const requestOptions = {
-        method: 'POST',
-        url: orderUrl,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        cancelToken: source.token
-      };
-
-      const timeoutId = setTimeout(() => source.cancel('Request timeout'), 15000);
-
-      axios(requestOptions)
-        .then((response) => {
-          const isJson = isJsonContent(response.headers);
-          if (response.status === 200) {
-            return isJson ? response.data : {};
-          } else {
-            if (isJson) {
-              throw new Error(response.data.message + (response.data.details ? (': ' + response.data.details) : ''));
-            } else {
-              throw new Error(response.data);
-            }
-          }
-        })
-        .then((data) => {
-          window.location.href = data.sessionUrl;
-        })
-        .catch((error) => {
-          handleServerError(error);
-        })
-        .finally(() => {
-          clearTimeout(timeoutId);
-          settingsIsLoading.value = false;
-        });
-    }).catch((error) => {
-      handleServerError(error);
-      settingsIsLoading.value = false;
-    });
-  }
-
-  function cancelSubscription() {
-    settingsIsLoading.value = true;
-
-    auth.getTokenSilently().then((token) => {
-      const source = axios.CancelToken.source();
-
-      const requestOptions = {
-        method: 'PUT',
-        url: subscriptionsUrl,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        data: {
-          subscriptionStatus: 'CANCELED'
-        },
-        cancelToken: source.token
-      };
-
-      const timeoutId = setTimeout(() => source.cancel('Request timeout'), 15000);
-
-      axios(requestOptions)
-        .then((response) => {
-          if (response.status === 200) {
-            auth.unsubscribe();
-            subscription.cancelAtPeriodEnd = true;
-            setLastServerMessage('yourSubscriptionWasCanceledClickToResume');
-          } else {
-            const isJson = isJsonContent(response.headers);
-            if (isJson) {
-              throw new Error(response.data.message + (response.data.details ? (': ' + response.data.details) : ''));
-            } else {
-              throw new Error(response.data);
-            }
-          }
-        })
-        .catch((error) => {
-          handleServerError(error);
-        })
-        .finally(() => {
-          clearTimeout(timeoutId);
-          settingsIsLoading.value = false;
-        });
-    }).catch((error) => {
-      handleServerError(error);
-      settingsIsLoading.value = false;
-    });
-  }
-
-  function resumeSubscription() {
-    settingsIsLoading.value = true;
-
-    auth.getTokenSilently().then((token) => {
-      const source = axios.CancelToken.source();
-
-      const requestOptions = {
-        method: 'PUT',
-        url: subscriptionsUrl,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        data: {
-          subscriptionStatus: 'ACTIVE'
-        },
-        cancelToken: source.token
-      };
-
-      const timeoutId = setTimeout(() => source.cancel('Request timeout'), 15000);
-
-      axios(requestOptions)
-        .then((response) => {
-          if (response.status === 200) {
-            auth.subscribe();
-            subscription.cancelAtPeriodEnd = false;
-            setLastServerMessage('yourSubscriptionWasResumed');
-          } else {
-            const isJson = isJsonContent(response.headers);
-            if (isJson) {
-              throw new Error(response.data.message + (response.data.details ? (': ' + response.data.details) : ''));
-            } else {
-              throw new Error(response.data);
-            }
-          }
-        })
-        .catch((error) => {
-          handleServerError(error);
-        })
-        .finally(() => {
-          clearTimeout(timeoutId);
-          settingsIsLoading.value = false;
-        });
-    }).catch((error) => {
-      handleServerError(error);
-      settingsIsLoading.value = false;
-    });
-  }
-
   function isJsonContent(headers) {
     const headerKeys = Object.keys(headers);
     for (let i = 0; i < headerKeys.length; i++) {
@@ -457,12 +300,10 @@ export function useSettingsService(props) {
   }
 
   const roAccount = readonly(account);
-  const roSubscription = readonly(subscription);
   const roSettingsIsLoading = readonly(settingsIsLoading);
 
   return {
     roAccount,
-    roSubscription,
     roSettingsIsLoading,
     openSettings,
     updateNotificationPreferences,
@@ -470,8 +311,5 @@ export function useSettingsService(props) {
     finalizeDeactivation,
     initPasswordReset,
     emailApiKey,
-    submitOrder,
-    cancelSubscription,
-    resumeSubscription,
   };
 }

@@ -1,9 +1,5 @@
 <template>
-    <div>
-        <div class="title text-center">
-            {{ $t('apiDocs', { name: 'ComposableRSS', version: '1.0' }) }}
-        </div>
-
+    <div class="m-8">
         <!-- link to OpenAPI V3 spec -->
 
         <!-- (0) the basics -->
@@ -32,3 +28,13 @@
 
 <script setup>
 </script>
+
+<style scoped>
+.docs-header {
+    font-family: 'Russo One';
+}
+
+.divider {
+    border-top: 1px solid slateblue;
+}
+</style>

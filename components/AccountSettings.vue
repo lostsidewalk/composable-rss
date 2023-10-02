@@ -12,29 +12,10 @@
         <span>{{ $t('yourApiKeyIs', { apiKey }) }}</span>
         <hr />
         <span>{{ $t('youHaveXPostsInYQueues', { x: totalPosts, y: totalQueues }) }}</span>
-        <span>{{ subscriptionStatus ? $t('subscriptionStatus', { status: 'NONE', started: 'NEVER' }) :
-          $t('supportComposableRSS') }}</span>
+        <span>{{ $t('supportComposableRSS') }}</span>
       </div>
     </div>
-    <AlertBox class="m-4" v-if="showFirstTimeUsageAlert && !showDeactivateUser"
-      @dismissAlert="suppressFirstTimeUsageAlert" priority="INFO">
-      <div class="flex flex-col gap-2 text-left">
-        <div>{{ $t('apiRequiresTWoHeaderValues') }}</div>
-        <div>
-          <pre>&nbsp; X-ComposableRSS-API-Key {{ apiKey }}</pre>
-        </div>
-        <div>
-          <pre>&nbsp; X-ComposableRSS-API-Secret <i>{{ $t('apiSecret') }}</i></pre>
-        </div>
-        <div>
-          {{ $t('apiSecretHasBeeenMailed') }}
-        </div>
-        <div>
-          {{ $t('instructionsLocatedBelow') }}
-        </div>
-      </div>
-    </AlertBox>
-    <AlertBox class="m-4" v-if="showDeactivateUser" :showDismiss="false">
+    <AlertBox class="m-4" v-show="showDeactivateUser" :showDismiss="false">
       <div class="flex flex-col gap-4">
         <div>
           {{ $t('youAreAboutToPermanentlyDeactivateYourAccount') }}
@@ -44,59 +25,61 @@
         </div>
       </div>
     </AlertBox>
-    <AlertBox class="m-4" v-if="showEmailApiKey" :showDismiss="false" :priority="'INFO'">
+    <AlertBox class="m-4" v-show="showEmailApiKey" :showDismiss="false" :priority="'INFO'">
       {{ $t('weWillSendYourApiKeyViaEmail') }}
     </AlertBox>
     <div class="card-actions">
       <!-- deactivate account button -->
-      <button class="settings-button rounded shadow-md" v-if="!showActions() && !showDeactivateUser" size="small"
+      <button class="settings-button rounded shadow-md" v-show="!showActions() && !showDeactivateUser" size="small"
         @click="showDeactivateUser = true">
         {{ $t('deactivateAccount') }}
       </button>
       <!-- download your data button -->
-      <button class="settings-button rounded shadow-md" v-if="showDeactivateUser" size="small"
+      <button class="settings-button rounded shadow-md" v-show="showDeactivateUser" size="small"
         @click="$emit('exportData')">
         {{ $t('downloadYourData') }}
       </button>
       <!-- permanently delete your account button -->
-      <button class="settings-button rounded shadow-md" v-if="showDeactivateUser" size="small"
+      <button class="settings-button rounded shadow-md" v-show="showDeactivateUser" size="small"
         @click="$emit('finalizeDeactivation')">
         {{ $t('permanentlyDeleteYourAccount') }}
       </button>
       <!-- cancel (deactivate account) button -->
-      <button class="settings-button rounded shadow-md" v-if="showDeactivateUser" id="cancelDeactivateAccount"
+      <button class="settings-button rounded shadow-md" v-show="showDeactivateUser" id="cancelDeactivateAccount"
         size="small" @click="showDeactivateUser = false">
         {{ $t('cancel') }}
       </button>
 
       <!-- reset password button (local) -->
       <button class="settings-button rounded shadow-md"
-        v-if="authProvider === 'LOCAL' && !showActions() && !showResetPassword" size="small"
+        v-if="authProvider === 'LOCAL'" 
+        v-show="!showActions() && !showResetPassword" 
+        size="small"
         @click="showResetPassword = true">
         {{ $t('resetPassword') }}
       </button>
       <!-- send password reset email -->
-      <button class="settings-button rounded shadow-md" v-if="showResetPassword" size="small"
+      <button class="settings-button rounded shadow-md" v-show="showResetPassword" size="small"
         @click="$emit('initPasswordReset')">
         {{ $t('sendPasswordResetEmail') }}
       </button>
       <!-- cancel (reset password) -->
-      <button class="settings-button rounded shadow-md" v-if="showResetPassword" id="cancelResetPassword" size="small"
+      <button class="settings-button rounded shadow-md" v-show="showResetPassword" id="cancelResetPassword" size="small"
         @click="showResetPassword = false">
         {{ $t('cancel') }}
       </button>
 
       <!-- email API key button -->
-      <button class="settings-button rounded shadow-md" v-if="!showActions() && !showEmailApiKey" size="small"
+      <button class="settings-button rounded shadow-md" v-show="!showActions() && !showEmailApiKey" size="small"
         @click="showEmailApiKey = true">
         {{ $t('emailApiKey') }}
       </button>
       <!-- send password reset email -->
-      <button class="settings-button rounded shadow-md" v-if="showEmailApiKey" size="small" @click="$emit('emailApiKey')">
+      <button class="settings-button rounded shadow-md" v-show="showEmailApiKey" size="small" @click="$emit('emailApiKey')">
         {{ $t('sendApiKeyEmail') }}
       </button>
       <!-- cancel (email API key) -->
-      <button class="settings-button rounded shadow-md" v-if="showEmailApiKey" id="cancelEmailApiKey" size="small"
+      <button class="settings-button rounded shadow-md" v-show="showEmailApiKey" id="cancelEmailApiKey" size="small"
         @click="showEmailApiKey = false">
         {{ $t('cancel') }}
       </button>
@@ -111,13 +94,8 @@ export default {
     authProviderProfileImgUrl: { type: String, required: false },
     emailAddress: { type: String, required: false, default: '' },
     apiKey: { type: String, required: false, default: '' },
-    subscriptionStatus: { type: String },
     totalPosts: { type: Number, default: 0 },
     totalQueues: { type: Number, default: 0 },
-  },
-  mounted() {
-    let a = localStorage.getItem('showFirstTimeUsageAlert');
-    this.showFirstTimeUsageAlert = (a !== 'false');
   },
   emits: ["exportData", "finalizeDeactivation", "initPasswordReset", "emailApiKey"],
   data() {
@@ -125,17 +103,12 @@ export default {
       showDeactivateUser: false,
       showResetPassword: false,
       showEmailApiKey: false,
-      showFirstTimeUsageAlert: false,
     };
   },
   methods: {
     showActions() {
       return this.showDeactivateUser || this.showResetPassword || this.showEmailApiKey;
     },
-    suppressFirstTimeUsageAlert() {
-      localStorage.setItem('showFirstTimeUsageAlert', false);
-      this.showFirstTimeUsageAlert = false;
-    }
   },
 };
 </script>

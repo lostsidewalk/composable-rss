@@ -3,7 +3,6 @@ import axios, { AxiosError } from "axios";
 
 interface User {
   username: string | null;
-  hasSubscription: boolean;
 }
 
 interface Auth {
@@ -12,8 +11,6 @@ interface Auth {
   pwResetWithSupplied: (username: string, email: string) => Promise<void>;
   pwUpdateWithSupplied: (newPassword: string, newPasswordConfirmed: string) => Promise<void>;
   registerWithSupplied: (username: string, email: string, password: string, userType: string) => Promise<{ username: string, password: string }>;
-  subscribe: () => void;
-  unsubscribe: () => void;
   logout: () => Promise<void>;
   tearDownLoggedInSession: () => void;
   token: string | null;
@@ -27,14 +24,11 @@ export function useAuthService() {
     pwResetWithSupplied: pwResetWithSupplied,
     pwUpdateWithSupplied: pwUpdateWithSupplied,
     registerWithSupplied: registerWithSupplied,
-    subscribe: subscribeLoggedInSession,
-    unsubscribe: unsubscribeLoggedInSession,
     logout: logout,
     tearDownLoggedInSession: tearDownLoggedInSession,
     token: null,
     user: reactive({
       username: null,
-      hasSubscription: false,
     })
   });
   const isAuthenticated: Ref<boolean> = ref(false);
@@ -77,16 +71,7 @@ export function useAuthService() {
     if (data) {
       auth.token = data.authToken;
       auth.user.username = data.username;
-      auth.user.hasSubscription = data.hasSubscription;
     }
-  }
-
-  function subscribeLoggedInSession() {
-    auth.user.hasSubscription = true;
-  }
-
-  function unsubscribeLoggedInSession() {
-    auth.user.hasSubscription = false;
   }
 
   function tearDownLoggedInSession() {
@@ -94,7 +79,6 @@ export function useAuthService() {
     isAuthenticated.value = false;
     auth.token = null;
     auth.user.username = null;
-    auth.user.hasSubscription = false;
   }
 
   function __getToken(): Promise<string | null> {

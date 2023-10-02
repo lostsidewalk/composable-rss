@@ -1,5 +1,5 @@
 <template>
-  <div class="settings-panel">
+  <div class="settings-panel m-8">
     <div class="flex row text-center justify-center">
       <div class="flex-grow cols-sm-10">
         <div @mouseover="isHovering = true" @mouseleave="isHovering = false"
@@ -18,9 +18,9 @@
                       :class="{ 'active': tabToShow === 'NOTIFICATIONS' }">
                       {{ $t('notifications') }}
                     </button>
-                    <button class="settings-tab rounded shadow-md" @click="setTab('SUBSCRIPTION')"
-                      :class="{ 'active': tabToShow === 'SUBSCRIPTION' }">
-                      {{ $t('subscription') }}
+                    <button class="settings-tab rounded shadow-md" @click="setTab('SUPPORT')"
+                      :class="{ 'active': tabToShow === 'SUPPORT' }">
+                      {{ $t('supportComposableRSS') }}
                     </button>
                   </div>
                 </div>
@@ -43,13 +43,6 @@
                             {{ $t('enableAccountAlertsNotifications') }}
                           </label>
                         </div>
-                        <div class="m-2 settings-option">
-                          <input type="checkbox" id="enableProductNotifications" v-model="enableProductNotifications"
-                            name="enableProductNotifications" />
-                          <label class="ml-1" for="enableProductNotifications">
-                            {{ $t('enableProductNotifications') }}
-                          </label>
-                        </div>
                         <div class="divider" />
                         <div class="card-actions">
                           <button class="settings-button rounded shadow-md" id="updateNotificationPreferences"
@@ -58,17 +51,14 @@
                           </button>
                         </div>
                       </div>
-                      <SubscriptionSettings v-show="tabToShow === 'SUBSCRIPTION' && hasSubscription"
-                        :subscription="subscription" @cancelSubscription="$emit('cancelSubscription')"
-                        @resumeSubscription="$emit('resumeSubscription')" />
-                      <div v-show="tabToShow === 'SUBSCRIPTION' && !hasSubscription" class="card m-4">
+                      <div v-show="tabToShow === 'SUPPORT'" class="card m-4">
                         <div class="card-text flex flex-row">
                           <span class="m-4">{{ $t('supportComposableRSS') }}</span>
                         </div>
                         <div class="card-actions">
-                          <button class="settings-button rounded shadow-md" id="checkout" size="small"
-                            @click="$emit('submitOrder')">
-                            {{ $t('checkout') }}
+                          <button class="settings-button rounded shadow-md" id="supportUsOnPatreon" size="small"
+                            @click="goToPatreon">
+                            {{ $t('supportUsOnPatreon') }}
                           </button>
                         </div>
                       </div>
@@ -89,12 +79,6 @@ export default {
   name: "SettingsPanel",
   props: {
     account: { type: Object, default: {} },
-    subscription: { type: Object, default: {} },
-  },
-  computed: {
-    hasSubscription() {
-      return this.subscription.status ? this.subscription.status.length > 0 : false;
-    },
   },
   emits: [
     "exportData",
@@ -104,16 +88,12 @@ export default {
     "updateAccount",
     "updateNotificationPreferences",
     "toggleNotifications",
-    "cancelSubscription",
-    "resumeSubscription",
-    "submitOrder",
   ],
   data() {
     return {
       enableAccountAlerts: true,
-      enableProductNotifications: true,
       isHovering: false,
-      tabToShow: "ACCOUNT", // 'NOTIFICATIONS' || 'SUBSCRIPTION'
+      tabToShow: "ACCOUNT", // 'NOTIFICATIONS' || 'SUPPORT'
     };
   },
   methods: {
@@ -123,19 +103,16 @@ export default {
     updateNotificationPreferences() {
       this.$emit("updateNotificationPreferences", {
         enableAccountAlerts: this.enableAccountAlerts,
-        enableDailyFeedReport: this.enableDailyFeedReport,
-        enableProductNotifications: this.enableProductNotifications,
       });
+    },
+    goToPatreon() {
+      window.location='https://www.patreon.com/lostsidewalk';
     },
   },
 };
 </script>
 
 <style scoped>
-.settings-panel {
-  padding: 2rem;
-}
-
 .gap-1 {
   gap: 1rem;
 }

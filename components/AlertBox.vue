@@ -1,5 +1,5 @@
 <template>
-    <div class=" p-4 rounded-lg shadow-md" :class="{'bg-blue-100': (priority === 'INFO'), 'bg-red-100': (priority === 'ERROR') }">
+    <div class="p-4 bg-gray-100 rounded-lg shadow-md" :class="{'bg-blue-100': (priority === 'INFO'), 'bg-red-100': (priority === 'ERROR') }">
       <button v-if="showDismiss" @click="dismissAlert" class="float-right" 
         :class="{ 'text-blue-500 hover:text-blue-800': (priority === 'INFO'), 'text-red-500 hover:text-red-800': (priority === 'ERROR') }">
         <svg

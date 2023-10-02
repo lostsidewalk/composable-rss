@@ -28,7 +28,7 @@
                     <AuthServerResponse :server-message="serverMessage" />
                     <button class="pa-2 border-0" :text="$t('privacyPolicy')"
                       @click="showPrivacyPolicy = !showPrivacyPolicy" />
-                    <div class="dialog" v-if="showPrivacyPolicy" fullscreen scrollable>
+                    <div class="dialog" v-show="showPrivacyPolicy" fullscreen scrollable>
                       <PrivacyPolicyPanel @dismiss="showPrivacyPolicy = false" />
                     </div>
                   </div>
