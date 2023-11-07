@@ -1,3 +1,11 @@
+<link rel="stylesheet" type="text/css" href="style.css">
+
+# composable-rss-client
+
+composable-rss is a multi-user, self-hosted platform that allows you to programmatically create, publish, and manage syndicated web feeds.
+
+This repository contains a browser application that provides internal users a way to access documentation, manage API keys, and view metrics related to their feeds.
+
 # ComposableRSS 
 
 Based on Nuxt 3 Minimal Starter
