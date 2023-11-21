@@ -5,9 +5,6 @@
             <button @click.prevent="devBlog" size="small" class="border-0">
                 {{ $t('devBlog') }}
             </button>
-            <button @click="showPrivacyPolicy = !showPrivacyPolicy" size="small" class="border-0">
-                {{ $t('privacyPolicy') }}
-            </button>
             <button @click.prevent="sendSupportMail" size="small" class="border-0">
                 {{ $t('email') }}
             </button>
@@ -43,7 +40,7 @@ export default {
     name: "FooterPanel",
     methods: {
         devBlog() {
-            window.open('https://www.lostsidewalk.com/feedgears/devblog', '_blank');
+            window.open('https://www.lostsidewalk.com/', '_blank');
         },
         sendSupportMail() {
             window.open('mailto:support@feedgears.com', '_blank');

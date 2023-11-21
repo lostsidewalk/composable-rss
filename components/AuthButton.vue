@@ -1,17 +1,7 @@
 <template>
-  <button
-    class="auth-button elevation-1 shadow-md rounded"
-    :class="{ 'loading': isLoading }"
-    @click="$emit('clicked')"
-  >
+  <button class="auth-button elevation-1 shadow-md rounded" :class="{ 'loading': isLoading }" @click="$emit('clicked')">
     {{ label }}
-    <div class="tooltip"
-      v-if="tooltip"
-      location="start"
-      activator="parent"
-      open-delay="2000"
-      :aria-label="tooltip"
-    >
+    <div class="tooltip" v-if="tooltip" location="start" activator="parent" open-delay="2000" :aria-label="tooltip">
       {{ tooltip }}
     </div>
   </button>

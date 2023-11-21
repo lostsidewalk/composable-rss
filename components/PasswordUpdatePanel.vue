@@ -20,11 +20,6 @@
                           @clicked="$emit('submit', { newPassword, newPasswordConfirmed })" />
                       </div>
                       <AuthServerResponse :server-message="serverMessage" />
-                      <button class="pa-2 border-0" :text="$t('privacyPolicy')"
-                        @click="showPrivacyPolicy = !showPrivacyPolicy" />
-                      <div class="dialog" v-show="showPrivacyPolicy" fullscreen scrollable>
-                        <PrivacyPolicyPanel @dismiss="showPrivacyPolicy = false" />
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -48,7 +43,6 @@ export default {
     return {
       newPassword: "",
       newPasswordConfirmed: "",
-      showPrivacyPolicy: false,
       isHovering: false,
     };
   },

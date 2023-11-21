@@ -20,19 +20,17 @@
                     </button>
                     <button class="settings-tab rounded shadow-md" @click="setTab('SUPPORT')"
                       :class="{ 'active': tabToShow === 'SUPPORT' }">
-                      {{ $t('supportComposableRSS') }}
+                      {{ $t('howYouCanHelp') }}
                     </button>
                   </div>
                 </div>
                 <div class="row text-center">
                   <div class="col flex-grow cols-sm-8">
                     <div class="flex flex-col flex-wrap justify-center gap-1">
-                      <AccountSettings v-show="tabToShow === 'ACCOUNT'" v-if="account" :authProvider="account.authProvider"
+                      <AccountSettings v-show="tabToShow === 'ACCOUNT'" v-if="account"
+                        :authProvider="account.authProvider"
                         :authProviderProfileImgUrl="account.authProviderProfileImgUrl" @exportData="$emit('exportData')"
-                        :emailAddress="account.emailAddress"
-                        :apiKey="account.apiKey"
-                        :totalPosts="1"
-                        :totalQueues="2"
+                        :emailAddress="account.emailAddress" :apiKey="account.apiKey" :totalPosts="1" :totalQueues="2"
                         @finalizeDeactivation="$emit('finalizeDeactivation')"
                         @initPasswordReset="$emit('initPasswordReset')" @emailApiKey="$emit('emailApiKey')" />
                       <div v-show="tabToShow === 'NOTIFICATIONS'" class="card m-4">
@@ -106,7 +104,7 @@ export default {
       });
     },
     goToPatreon() {
-      window.location='https://www.patreon.com/lostsidewalk';
+      window.location = 'https://www.patreon.com/lostsidewalk';
     },
   },
 };

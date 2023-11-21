@@ -12,7 +12,6 @@
         <span>{{ $t('yourApiKeyIs', { apiKey }) }}</span>
         <hr />
         <span>{{ $t('youHaveXPostsInYQueues', { x: totalPosts, y: totalQueues }) }}</span>
-        <span>{{ $t('supportComposableRSS') }}</span>
       </div>
     </div>
     <AlertBox class="m-4" v-show="showDeactivateUser" :showDismiss="false">
@@ -51,11 +50,8 @@
       </button>
 
       <!-- reset password button (local) -->
-      <button class="settings-button rounded shadow-md"
-        v-if="authProvider === 'LOCAL'" 
-        v-show="!showActions() && !showResetPassword" 
-        size="small"
-        @click="showResetPassword = true">
+      <button class="settings-button rounded shadow-md" v-if="authProvider === 'LOCAL'"
+        v-show="!showActions() && !showResetPassword" size="small" @click="showResetPassword = true">
         {{ $t('resetPassword') }}
       </button>
       <!-- send password reset email -->
@@ -75,7 +71,8 @@
         {{ $t('emailApiKey') }}
       </button>
       <!-- send password reset email -->
-      <button class="settings-button rounded shadow-md" v-show="showEmailApiKey" size="small" @click="$emit('emailApiKey')">
+      <button class="settings-button rounded shadow-md" v-show="showEmailApiKey" size="small"
+        @click="$emit('emailApiKey')">
         {{ $t('sendApiKeyEmail') }}
       </button>
       <!-- cancel (email API key) -->

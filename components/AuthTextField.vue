@@ -1,14 +1,7 @@
 <template>
-  <input
-    class="auth-text-field elevation-1 outlined rounded dense"
-    autocomplete="false"
-    :label="label"
-    :aria-label="label"
-    :placeholder="placeholder"
-    :value="modelValue"
-    :type="type ? type : 'text'"
-    @input="$emit('update:modelValue', $event.target.value)"
-  />
+  <input class="auth-text-field elevation-1 outlined rounded dense" autocomplete="false" :label="label"
+    :aria-label="label" :placeholder="placeholder" :value="modelValue" :type="type ? type : 'text'"
+    @input="$emit('update:modelValue', $event.target.value)" />
 </template>
 
 <script>

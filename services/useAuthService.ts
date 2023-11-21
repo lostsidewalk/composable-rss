@@ -264,7 +264,7 @@ export function useAuthService() {
         })
         .then(() => {
           log("logout successful");
-          resolve(); 
+          resolve();
         })
         .catch((error) => {
           reject(getError(error));
@@ -277,6 +277,6 @@ export function useAuthService() {
 
   return {
     auth,
-    isAuthenticated, 
+    isAuthenticated,
   }
 }

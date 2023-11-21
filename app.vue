@@ -23,120 +23,29 @@
     <PasswordUpdatePanel class="panel" v-show="!isAuthenticated && formToShow === 'pw_update'"
       :server-message="pwUpdateServerMessage" :is-loading="pwUpdateIsLoading" @submit="submitPwUpdate" />
 
-    <SettingsPanel class="panel" v-show="isAuthenticated" :account="roAccount" 
-      :is-loading="roSettingsIsLoading" @exportData="exportData" @finalizeDeactivation="finalizeDeactivation"
-      @initPasswordReset="initPasswordReset" @updateNotificationPreferences="updateNotificationPreferences"
-      @emailApiKey="emailApiKey" />
+    <SettingsPanel class="panel" v-show="isAuthenticated" :account="roAccount" :is-loading="roSettingsIsLoading"
+      @exportData="exportData" @finalizeDeactivation="finalizeDeactivation" @initPasswordReset="initPasswordReset"
+      @updateNotificationPreferences="updateNotificationPreferences" @emailApiKey="emailApiKey" />
 
-    <AlertBox class="ml-8 mr-8 panel" v-if="roServerMessage" @dismissAlert="clearServerMessage">
+    <AlertBox class="m-8 mb-0 panel" v-if="roServerMessage" @dismissAlert="clearServerMessage">
       {{ roServerMessage }}
     </AlertBox>
 
-    <AlertBox class="m-8 panel" :priority="'NONE'" :showDismiss="false">
-      <div class="font-bold pb-4">{{ $t('whatIsComposableRSS') }}</div>
-      <div class="flex flex-col gap-4 text-left">
-        <hr class="divider" />
-        <!-- What is ComposableRSS ?-->
-        <div>
-          ComposableRSS (cRSS) is a REST API that allows you to programatically create, publish, and fully manage
-          syndicated web feeds (RSS 2.0 and ATOM 1.0 feeds), hosted on FeedGears RSS.
-        </div>
-        <div>
-          ComposableRSS is fully user/community-suported. 
-        </div>
-        <div>
-          This page explains the entire API and provides exampels of each type of interaction using cURL. Please click
-          here for more information about using cURL.
-        </div>
-        <div>
-          For advanced usage, the cRSS OpenAPI V3 specification is located <a href="#">here</a>. You can use the linked document
-          to generate both
-          client and server code in various languages to produce and consume the cRSS API. Please click here for more
-          information about OpenAPI.
-        </div>
-      </div>
+    <AlertBox class="m-8 mb-0 panel" :priority="'NONE'" :showDismiss="false">
+      <WhatIsComposableRSS />
     </AlertBox>
 
-    <AlertBox class="ml-8 mr-8 panel" v-if="showFirstTimeUsageAlert"
-      @dismissAlert="suppressFirstTimeUsageAlert" priority="NONE">
-      <div class="font-bold pb-4">{{ $t('gettingStarted') }}</div>
-      <div class="flex flex-col gap-4">
-        <hr />
-        Examples are shown using cURL. Click here for more information about cURL. 
-        <!-- step 1: API requirements -->
-        <div class="flex flex-col gap-4 text-left">
-          <div class="font-bold">STEP 1 - ACTIVATE YOUR API CREDENTIALS </div>
-          <div class="outlined rounded border-2 p-4 flex flex-col gap-4 text-left overflow-auto">
-            <div>{{ $t('apiRequiresTWoHeaderValues') }}</div>
-            <div>
-              <pre>X-ComposableRSS-API-Key <i>{{ isAuthenticated ? roAccount.apiKey : $t('apiKey') }}</i></pre>
-            </div>
-            <div>
-              <pre>X-ComposableRSS-API-Secret <i>{{ $t('apiSecret') }}</i></pre>
-            </div>
-            <div>
-              {{ $t('apiSecretHasBeeenMailed') }}
-            </div>
-            <div>
-              {{ $t('basicQueryInstructions') }}
-            </div>
-            <div>
-              <pre>curl -H "X-ComposableRSS-API-Key {{ isAuthenticated ? roAccount.apiKey : $t('apiKey') }}" \
--H "X-ComposableRSS-API-Secret ..." \
-https://api.composablerss.com/[endpoint]</pre>
-            </div>
-          </div>
-        </div>
-        <!-- step 2: -->
-        <div class="flex flex-col gap-4 text-left">
-          <div class="font-bold">STEP 2 - CREATE AND PUBLISH YOUR FIRST FEED</div>
-          <div class="outlined rounded border-2 p-4 flex flex-col gap-4 text-left">
-            <div>{{ $t('createAndPublishYourFirstFeed') }}</div>
-          </div>
-        </div>
-        <!-- step 3: -->
-        <div class="flex flex-col gap-4 text-left">
-          <div class="font-bold">STEP 3 - ADD CONTENT TO YOUR FEED</div>
-          <div class="outlined rounded border-2 p-4 flex flex-col gap-4 text-left">
-            <div>{{ $t('addContentToYourFeed') }}</div>
-          </div>
-        </div>
-        <!-- step 4: -->
-        <div class="flex flex-col gap-4 text-left">
-          <div class="font-bold">STEP 4 - ADD MEDIA TO YOUR FEED USING THE POST MEDIA MODULE</div>
-          <div class="outlined rounded border-2 p-4 flex flex-col gap-4 text-left">
-            <div>{{ $t('addMediaToYourFeed') }}</div>
-          </div>
-        </div>
-        <!-- step 5: -->
-        <div class="flex flex-col gap-4 text-left">
-          <div class="font-bold">STEP 5 - ADD A PODCAST TO YOUR FEED USING THE ITUNES MODULE AND ENCLOSURES</div>
-          <div class="outlined rounded border-2 p-4 flex flex-col gap-4 text-left">
-            <div>{{ $t('addAPodcastToYourFeed') }}</div>
-          </div>
-        </div>
-        <!-- step 6: -->
-        <div class="flex flex-col gap-4 text-left">
-          <div class="font-bold">STEP 6 - SETUP AUTHENTICATED USERS</div>
-          <div class="outlined rounded border-2 p-4 flex flex-col gap-4 text-left">
-            <div>{{ $t('setupAuthentication') }}</div>
-          </div>
-        </div>
-        <!-- step 7: -->
-        <div class="flex flex-col gap-4 text-left">
-          <div class="font-bold">STEP 6 - CONFIGURE ADVANCED OPTIONS</div>
-          <div class="outlined rounded border-2 p-4 flex flex-col gap-4 text-left">
-            <div>{{ $t('configureAdvancedOptions') }}</div>
-          </div>
-        </div>
-      </div>
+    <AlertBox v-if="showFirstTimeUsageAlert" class="m-8 mb-0 panel" priority="NONE"
+      @dismissAlert="suppressFirstTimeUsageAlert">
+      <GettingStarted />
     </AlertBox>
 
-    <AlertBox class="m-8 panel" :priority="'NONE'" :showDismiss="false">
-      <div class="font-bold pb-4">{{ $t('additionalResources') }}</div>
-      <div class="flex flex-col gap-4 text-left">
-        <hr class="divider" />
-      </div>
+    <AlertBox class="m-8 mb-0 panel" priority="NONE" :showDismiss="false">
+      <UsingTheApi />
+    </AlertBox>
+
+    <AlertBox class="m-8 mb-0 panel" :priority="'NONE'" :showDismiss="false">
+      <AdditionalResources />
     </AlertBox>
 
     <Footer class="panel" />
@@ -380,13 +289,41 @@ watch(isAuthenticated, (newIsAuthenticated) => {
 
 <style>
 pre {
-  margin: .4rem;
   padding: .8rem;
   border: 1px solid darkgrey;
-  border-radius: 3px;
+  border-radius: 5px;
   box-shadow: 1px 1px 1px grey;
   color: rgb(209 213 219);
   background-color: rgb(17 24 39);
   overflow: auto;
+  width: 100%;
+}
+
+a {
+  color: lightslategray;
+}
+
+a:hover,
+a:focus-visible {
+  text-decoration: underline;
+}
+
+.green {
+  color: lightgreen;
+}
+
+.blue {
+  color: lightskyblue;
+}
+
+.red {
+  color: lightcoral;
+}
+
+.curl-request {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: .8rem;
 }
 </style>

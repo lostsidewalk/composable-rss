@@ -29,8 +29,8 @@ export function useNotifications(props) {
   const roServerMessage = readonly(serverMessage);
 
   return {
-    roServerMessage, 
-    handleServerError, 
+    roServerMessage,
+    handleServerError,
     setLastServerMessage,
     clearServerMessage,
   }

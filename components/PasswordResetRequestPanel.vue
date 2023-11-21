@@ -26,11 +26,6 @@
                     <AuthButton class="m-4" :label="$t('registerHere')" :tooltip="$t('registerHere')"
                       :is-loading="isLoading" @clicked="$emit('register')" />
                     <AuthServerResponse :server-message="serverMessage" />
-                    <button class="pa-2 border-0" :text="$t('privacyPolicy')"
-                      @click="showPrivacyPolicy = !showPrivacyPolicy" />
-                    <div class="dialog" v-show="showPrivacyPolicy" fullscreen scrollable>
-                      <PrivacyPolicyPanel @dismiss="showPrivacyPolicy = false" />
-                    </div>
                   </div>
                 </div>
               </div>
@@ -54,7 +49,6 @@ export default {
     return {
       username: "",
       email: "",
-      showPrivacyPolicy: false,
       isHovering: false,
     };
   },

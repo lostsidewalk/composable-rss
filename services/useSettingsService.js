@@ -164,7 +164,7 @@ export function useSettingsService(props) {
           if (response.status === 200) {
             return response.data;
           } else {
-            throw new Error('Unexpected response status: ' + response.status);
+            throw new Error($t('unexpectedResponseStatus', { "statusCode": response.status }));
           }
         })
         .then((blob) => {
@@ -213,7 +213,7 @@ export function useSettingsService(props) {
           if (response.status === 200) {
             return response.data;
           } else {
-            throw new Error('Unexpected response status: ' + response.status);
+            throw new Error($t('unexpectedResponseStatus', { "statusCode": response.status }));
           }
         })
         .catch((error) => {
@@ -267,7 +267,7 @@ export function useSettingsService(props) {
           if (response.status === 200) {
             return; // response payload is ignored 
           } else {
-            throw new Error('Unexpected response status: ' + response.status);
+            throw new Error($t('unexpectedResponseStatus', { "statusCode": response.status }));
           }
         })
         .then(() => {
