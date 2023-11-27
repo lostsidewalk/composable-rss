@@ -8,4 +8,11 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  runtimeConfig: {
+    public: {
+      comprssApiUrl: 'http://localhost:8080',
+      comprssOriginUrl: 'http://localhost:3000',
+      feedgearsFeedUrl: 'http://localhost:8081',
+    }
+  },
 })

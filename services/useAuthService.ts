@@ -1,4 +1,5 @@
 import { ref, reactive, Ref } from "vue";
+import { useRuntimeConfig } from "nuxt/app";
 import axios, { AxiosError } from "axios";
 
 interface User {
@@ -34,13 +35,14 @@ export function useAuthService() {
   const isAuthenticated: Ref<boolean> = ref(false);
 
   // URLs
-  let compRssApiUrl = import.meta.env.VITE_COMPRSS_API_URL;
-  const currentUserUrl = compRssApiUrl + "/currentuser";
-  const authUrl = compRssApiUrl + "/authenticate";
-  const pwResetUrl = compRssApiUrl + "/pw_reset";
-  const pwUpdateUrl = compRssApiUrl + "/pw_update";
-  const registrationUrl = compRssApiUrl + "/register";
-  const logoutUrl = compRssApiUrl + "/deauthenticate";
+  const config = useRuntimeConfig();
+  let comprssApiUrl = config.public.comprssApiUrl;
+  const currentUserUrl = comprssApiUrl + "/currentuser";
+  const authUrl = comprssApiUrl + "/authenticate";
+  const pwResetUrl = comprssApiUrl + "/pw_reset";
+  const pwUpdateUrl = comprssApiUrl + "/pw_update";
+  const registrationUrl = comprssApiUrl + "/register";
+  const logoutUrl = comprssApiUrl + "/deauthenticate";
 
   function log(msg: string) {
     console.log("auth-service: " + msg);

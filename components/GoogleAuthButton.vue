@@ -11,10 +11,12 @@
 </template>
 
 <script setup>
-const compRssOriginUrl = import.meta.env.VITE_COMPRSS_API_URL;
+import { useRuntimeConfig } from 'nuxt/app';
+
+const config = useRuntimeConfig();
 
 function googleOauth2() {
-  window.location = compRssOriginUrl + '/oauth2/authorize/google?redirect_uri=' + import.meta.env.VITE_COMPRSS_ORIGIN_URL + '/app';
+  window.location = config.public.comprssApiUrl + '/oauth2/authorize/google?redirect_uri=' + config.public.comprssOriginUrl + '/app';
 }
 </script>
 

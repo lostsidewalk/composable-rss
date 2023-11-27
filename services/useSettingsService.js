@@ -1,4 +1,5 @@
 import { ref, reactive, readonly } from 'vue';
+import { useRuntimeConfig } from 'nuxt/app';
 import axios from "axios";
 
 export function useSettingsService(props) {
@@ -10,11 +11,12 @@ export function useSettingsService(props) {
   const settingsIsLoading = ref(false);
   const account = reactive({});
 
-  let compRssApiUrl = import.meta.env.VITE_COMPRSS_API_URL;
-  const settingsUrl = compRssApiUrl + '/settings';
-  const exportUrl = compRssApiUrl + '/export';
-  const deregisterUrl = compRssApiUrl + '/deregister';
-  const emailApiKeyUrl = compRssApiUrl + '/send_key';
+  const config = useRuntimeConfig();
+  let comprssApiUrl = config.public.comprssApiUrl;
+  const settingsUrl = comprssApiUrl + '/settings';
+  const exportUrl = comprssApiUrl + '/export';
+  const deregisterUrl = comprssApiUrl + '/deregister';
+  const emailApiKeyUrl = comprssApiUrl + '/send_key';
 
   const auth = props.auth;
 
