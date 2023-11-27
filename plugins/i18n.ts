@@ -72,6 +72,7 @@ export default defineNuxtPlugin(({ vueApp }) => {
         "settings": "Settings",
         "account": "Account",
         "notifications": "Notifications",
+        "howYouCanHelp": "How You Can Help",
         "enableAccountAlertsNotifications": "Enable account alerts",
         "updateNotificationPreferences": "Update notification preferences",
         "supportComposableRSS": "Please consider donating to keep ComposableRSS alive.",
