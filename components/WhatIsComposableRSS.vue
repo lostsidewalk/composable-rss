@@ -86,7 +86,31 @@
                 <div>
                     {{ $t('openApiV3') }}
                 </div>
+                <div>
+                    <a href="#" @click.prevent="downloadOpenAPIv3Spec">
+                        <code>composable-rss-v1_openapiv3.json</code>
+                    </a>
+                </div>
             </template>
         </BorderBox>
     </div>
 </template>
+
+<script setup>
+import axios from 'axios';
+
+const downloadOpenAPIv3Spec = async () => {
+  try {
+    const response = await axios.get('/composable-rss-v1_openapiv3.json', { responseType: 'blob' });
+
+    const blob = new Blob([response.data], { type: 'application/octet-stream' });
+    const link = document.createElement('a');
+
+    link.href = window.URL.createObjectURL(blob);
+    link.download = 'composable-rss-v1_openapiv3.json';
+    link.click();
+  } catch (error) {
+    console.error('Error downloading OpenAPIv3 spec:', error);
+  }
+};
+</script>

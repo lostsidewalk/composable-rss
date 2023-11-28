@@ -44,10 +44,6 @@
       <UsingTheApi />
     </AlertBox>
 
-    <AlertBox class="m-8 mb-0 panel" :priority="'NONE'" :showDismiss="false">
-      <AdditionalResources />
-    </AlertBox>
-
     <Footer class="panel" />
   </div>
 </template>

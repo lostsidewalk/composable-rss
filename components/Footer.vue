@@ -43,7 +43,7 @@ export default {
             window.open('https://www.lostsidewalk.com/', '_blank');
         },
         sendSupportMail() {
-            window.open('mailto:support@feedgears.com', '_blank');
+            window.open('mailto:meh@lostsidewalk.com', '_blank');
         },
         twitter() {
             window.open('https://twitter.com/lostsidewalkllc', '_blank');
@@ -52,7 +52,7 @@ export default {
             window.open('https://github.com/lostsidewalk', '_blank');
         },
         twitch() {
-            window.open('https://twitch.tv/elderscrollsjesus', '_blank');
+            window.open('https://twitch.tv/lostsidewalk', '_blank');
         },
         discord() {
             window.open('https://discord.gg/7nyY89UrNw', '_blank');
