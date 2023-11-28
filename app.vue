@@ -56,6 +56,8 @@
 import { onMounted } from 'vue';
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useSeoMeta } from 'nuxt/app';
+import { useHead } from 'nuxt/app';
 
 import { useAuthService } from '@/services/useAuthService.ts';
 import { useSettingsService } from '@/services/useSettingsService.js';
@@ -272,6 +274,20 @@ watch(isAuthenticated, (newIsAuthenticated) => {
   }
 });
 
+useHead({
+  htmlAttrs: { lang: 'en' },
+  style: 'font-size: 12px',
+  link: [
+    { rel: 'icon', type: 'image/x-icon', href: 'img/icons/favicon-32x32.png' },
+  ],
+});
+
+useSeoMeta({
+  title: "ComposableRSS",
+  ogTitle: "ComposableRSS",
+  description: "ComposableRSS",
+  ogDescription: "ComposableRSS",
+});
 </script>
 
 <style scoped>

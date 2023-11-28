@@ -3,10 +3,10 @@
     <div class="card-text flex flex-row" :class="{ 'disable-overlay': showDeactivateUser }">
       <!-- profile image -->
       <img v-if="authProvider !== 'LOCAL' && authProviderProfileImgUrl" :src="authProviderProfileImgUrl"
-        referrerpolicy="no-referrer" class="m-4 profile-img" :alt="$t('oAuth2ProfileImage')" height="96" max-height="96"
-        max-width="96" />
-      <img v-else src="~/assets/feedgears.png" referrerpolicy="no-referrer" class="m-4 profile-img" height="96"
-        max-height="96" max-width="96" />
+        referrerpolicy="no-referrer" class="m-4 profile-img" :alt="$t('oAuth2ProfileImage')" height="144" max-height="144"
+        max-width="144" />
+      <img v-else src="~/assets/feedgears.png" referrerpolicy="no-referrer" class="m-4 profile-img" height="144"
+        max-height="144" max-width="144" />
       <div class="flex flex-col text-left gap-1 m-4 flex-wrap overflow-auto profile-data">
         <span>{{ $t('yourEmailAddressIs', { emailAddress }) }}</span>
         <span>{{ $t('yourApiKeyIs', { apiKey }) }}</span>
